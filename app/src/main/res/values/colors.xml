@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <color name="activity_bg">#212121</color>
+    <color name="button_normal_bg">#26b99a</color>
+    <color name="colorhint">#FDFCF7</color>
+    <color name="colorchoose">#26b99a</color>
+    <color name="colorPrimary">#0abc64</color>
+    <color name="colorPrimaryDark">#0abc64</color>
+    <color name="colorAccent">#e23c52</color>
+    <color name="colorChoose">#99FE9600</color>
+    <color name="black_overlay">#66000000</color>
+    <color name="btn_main_color">#26b99a</color>
+    <color name="btn_main_color_shadow">#277625</color>
+
+</resources>
