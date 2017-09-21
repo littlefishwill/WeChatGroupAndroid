@@ -5,9 +5,6 @@ import android.graphics.Canvas;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
-import com.hanks.htextview.base.AnimationListener;
-import com.hanks.htextview.base.HTextView;
-import com.szw.tools.wechatgroupandroid.view.htext.ScaleText;
 import com.szw.tools.wechatgroupandroid.view.htext.base.AnimationListener;
 import com.szw.tools.wechatgroupandroid.view.htext.base.HTextView;
 
