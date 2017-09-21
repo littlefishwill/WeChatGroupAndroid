@@ -14,4 +14,9 @@
     <color name="btn_main_color">#26b99a</color>
     <color name="btn_main_color_shadow">#277625</color>
 
+    <color name="fab_background_color">#e23c52</color>
+    <color name="dialog_background_color">#fafafa</color>
+    <color name="dialog_background_scrim">#99323232</color>
+
+
 </resources>

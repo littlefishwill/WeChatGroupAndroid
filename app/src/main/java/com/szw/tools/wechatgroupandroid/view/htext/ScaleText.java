@@ -57,8 +57,10 @@ public class ScaleText extends HText {
 
     @Override
     public void animateText(CharSequence text) {
-        oldStartX = mHTextView.getLayout().getLineLeft(0);
-        super.animateText(text);
+        if(mHTextView.getLayout()!=null) {
+            oldStartX = mHTextView.getLayout().getLineLeft(0);
+            super.animateText(text);
+        }
     }
 
     @Override

@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">WeChatHelp</string>
     <string name="action_settings">Settings</string>
+
+    <string name="access_service_switch_name">微问服务</string>
+    <string name="access_service_des">您需要激活此服务，才可以正常使用本软件</string>
+
+    <string name="transition_dialog">transition_dialog</string>
+
 </resources>

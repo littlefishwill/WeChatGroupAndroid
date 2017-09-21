@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-
 import com.szw.tools.wechatgroupandroid.view.htext.base.AnimationListener;
 import com.szw.tools.wechatgroupandroid.view.htext.base.HTextView;
 
