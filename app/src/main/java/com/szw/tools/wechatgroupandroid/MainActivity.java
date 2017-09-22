@@ -8,22 +8,31 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.szw.tools.wechatgroupandroid.fragment.action.ActionListFragment;
 import com.szw.tools.wechatgroupandroid.service.PhoneActivityService;
+import com.szw.tools.wechatgroupandroid.service.StartService;
+import com.szw.tools.wechatgroupandroid.user.User;
+import com.szw.tools.wechatgroupandroid.user.UserManager;
 import com.szw.tools.wechatgroupandroid.view.RippleView;
 import com.szw.tools.wechatgroupandroid.view.dialog.DialogActivity;
 import com.szw.tools.wechatgroupandroid.view.htext.ScaleTextView;
 
 public class MainActivity extends BaseActivity {
+
+    public static int Request_Dialog_Open= 1;
+    public static int Request_Dialog_Res_Cancle =3;
+    public static int Request_Dialog_Res_Success =4;
+
+
     private RippleView helpSwitch;
     private ScaleTextView switchDes;
     private BaseFragment actionListFragment;
     private FloatingActionButton serviceSwitch;
-    private boolean isOpenService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,8 +43,6 @@ public class MainActivity extends BaseActivity {
         helpSwitch = (RippleView) findViewById(R.id.ripp_view_main_switchopen);
         switchDes = (ScaleTextView) findViewById(R.id.sctv_main_switch_des);
         serviceSwitch = (FloatingActionButton) findViewById(R.id.fab);
-
-//        switchDes.setText("开启");
 
         actionSwitch();
         actionListLogic();
@@ -49,30 +56,31 @@ public class MainActivity extends BaseActivity {
      * 功能开关
      */
     private void actionSwitch() {
-        if(isOpenService){
-            helpSwitch.setVisibility(View.VISIBLE);
-        }else{
-            helpSwitch.setVisibility(View.INVISIBLE);
-            helpSwitch.stopRippleAnimation();
-        }
-
 
         serviceSwitch.setOnClickListener(new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
-                if(isOpenService){
-                    helpSwitch.setVisibility(View.VISIBLE);
-                    helpSwitch.startRippleAnimation();
-                }else{
-                    Intent intent = new Intent(MainActivity.this, DialogActivity.class);
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, serviceSwitch, getString(R.string.transition_dialog));
-                    startActivityForResult(intent, 1, options.toBundle());
-                    switchDes.animateText("开启服务后，重新点击这里哦~");
-                }
-
+                User user = UserManager.getInstance().getUser();
+                user.setOpen(!user.isOpen());
+                if (PhoneActivityService.isAccessibilitySettingsOn(MainActivity.this)) {
+                    if (UserManager.getInstance().getUser().isOpen()) {
+                        helpSwitch.setVisibility(View.VISIBLE);
+                        helpSwitch.startRippleAnimation();
+                        switchDes.animateText("已开启，正常运行中~");
+                    }else{
+                        helpSwitch.setVisibility(View.INVISIBLE);
+                        helpSwitch.startRippleAnimation();
+                        switchDes.animateText("已关闭,点击小红钮可开启~");
+                    }
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
+                } else {
+                    Intent intent = new Intent(MainActivity.this, DialogActivity.class);
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, serviceSwitch, getString(R.string.transition_dialog));
+                    startActivityForResult(intent, Request_Dialog_Open, options.toBundle());
+                    switchDes.animateText("开启服务后，重新点击这里哦~");
+                }
             }
         });
     }
@@ -80,14 +88,38 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+        if(requestCode == Request_Dialog_Open && resultCode == Request_Dialog_Res_Success){
+                startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        switchDes.animateText("开~");
-        isOpenService = PhoneActivityService.isAccessibilitySettingsOn(MainActivity.this);
+        checkServiceStatue();
+        stopService(new Intent(this, StartService.class));
+    }
+    private void checkServiceStatue() {
+        switchDes.animateText("");
+        if(PhoneActivityService.isAccessibilitySettingsOn(MainActivity.this)){
+            User user = UserManager.getInstance().getUser();
+            if(user.isOpen()){
+                helpSwitch.setVisibility(View.VISIBLE);
+                helpSwitch.startRippleAnimation();
+                switchDes.animateText("已开启，正常运行中~");
+            }else{
+                helpSwitch.setVisibility(View.INVISIBLE);
+                helpSwitch.stopRippleAnimation();
+                switchDes.animateText("已关闭,点击小红钮可开启~");
+            }
+        }else{
+            helpSwitch.setVisibility(View.INVISIBLE);
+            helpSwitch.stopRippleAnimation();
+            User user = UserManager.getInstance().getUser();
+            user.setOpen(false);
+            UserManager.getInstance().updateUser(user);
+            switchDes.animateText("请点击小红钮，手动开启服务.");
+        }
     }
 
     private void actionListLogic() {
@@ -117,4 +149,16 @@ public class MainActivity extends BaseActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            moveTaskToBack(true);
+            Intent service = new Intent(this, StartService.class);
+            startService(service);
+            return true;
+        }
+        return false;
+    }
+
 }

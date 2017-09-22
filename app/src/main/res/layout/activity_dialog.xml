@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DialogActivity">
+    tools:context=".view.dialog.DialogActivity">
 
     <LinearLayout
         android:id="@+id/container"
@@ -26,14 +26,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="遗憾通知"
+            android:text="需手动开启服务"
             android:textAppearance="?android:textAppearanceLarge"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="您需要手动前往设置-辅助功能-无障碍-微问服务-选择开启，才可以使用正常使用该软件"
+            android:text="如果您期望正常使用该软件.\n请前往'系统设置->辅助功能->无障碍->微问服务->选择并开启.'"
             android:textAppearance="?android:textAppearanceMedium"/>
 
         <Button

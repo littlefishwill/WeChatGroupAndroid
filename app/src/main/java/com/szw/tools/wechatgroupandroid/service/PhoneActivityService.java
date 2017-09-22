@@ -9,9 +9,16 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.Toast;
+
+import com.szw.tools.wechatgroupandroid.WeChatAdnroidGroup;
+import com.szw.tools.wechatgroupandroid.service.domain.WeChat;
+import com.szw.tools.wechatgroupandroid.user.UserManager;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by shenmegui on 2017/9/15.
@@ -24,18 +31,44 @@ public class PhoneActivityService extends AccessibilityService {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        AccessibilityNodeInfo ani = getRootInActiveWindow();
-        if (ani != null) {
-            ani.refresh(); // to fix issue with viewIdResName = null on Android 6+
+
+        if(!UserManager.getInstance().getUser().isOpen()){
+            return;
         }
-        switch (event.getEventType()){
-            case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
-//                controlActivityChange(event);
-                break;
-            case AccessibilityEvent.TYPE_VIEW_SCROLLED:
-                wechatTell(event);
-                break;
-        }
+
+        /**
+         * 监听进入微信主界面
+         */
+        WeChatUtils.getInstance().initWeChat(PhoneActivityService.this,event, new WeChatUtils.WeChatBaseListener<Objects>(){
+
+            @Override
+            public void onGet(Objects object) {
+
+            }
+
+            @Override
+            public void onExit() {
+
+            }
+        });
+        //----监听 进入聊天界面监听
+        WeChatUtils.getInstance().onEnterTell(event,new WeChatUtils.WeChatBaseListener<WeChat>(){
+            @Override
+            public void onGet(WeChat object) {
+                Toast.makeText(WeChatAdnroidGroup.getInstance(),object.getName(),Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onExit() {
+                Toast.makeText(WeChatAdnroidGroup.getInstance(),"退出群聊",Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    @Override
+    protected void onServiceConnected() {
+        super.onServiceConnected();
+        Toast.makeText(WeChatAdnroidGroup.getInstance(),"您已经开启了服务,请返回重新点击小红点，方可使用软件功能",Toast.LENGTH_LONG).show();
     }
 
     /**

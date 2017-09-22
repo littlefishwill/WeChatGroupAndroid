@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 
+import com.szw.tools.wechatgroupandroid.MainActivity;
 import com.szw.tools.wechatgroupandroid.R;
 
 public class DialogActivity extends AppCompatActivity {
@@ -28,7 +29,7 @@ public class DialogActivity extends AppCompatActivity {
         //方式一
         setupSharedEelementTransitions1();
         //方式二
-        //setupSharedEelementTransitions2();
+//        setupSharedEelementTransitions2();
 
         View.OnClickListener dismissListener = new View.OnClickListener() {
             @Override
@@ -37,7 +38,14 @@ public class DialogActivity extends AppCompatActivity {
             }
         };
         container.setOnClickListener(dismissListener);
-        container.findViewById(R.id.close).setOnClickListener(dismissListener);
+        container.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onClick(View v) {
+                setResult(MainActivity.Request_Dialog_Res_Success);
+                finishAfterTransition();
+            }
+        });
     }
 
     /**

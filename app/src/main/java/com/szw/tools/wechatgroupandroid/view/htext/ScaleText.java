@@ -60,6 +60,8 @@ public class ScaleText extends HText {
         if(mHTextView.getLayout()!=null) {
             oldStartX = mHTextView.getLayout().getLineLeft(0);
             super.animateText(text);
+        }else{
+            super.animateText(text);
         }
     }
 
