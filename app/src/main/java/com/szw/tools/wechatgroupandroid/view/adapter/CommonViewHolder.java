@@ -49,6 +49,10 @@ public class CommonViewHolder extends RecyclerView.ViewHolder
         }
         return (T) view;
     }
+
+    public View getRootView(){
+        return  mConvertView;
+    }
 }
 
 

@@ -7,6 +7,8 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +21,18 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<CommonViewHo
     protected List<T> mDatas;
     protected LayoutInflater mInflater;
 
+    public void addDoamin(T object){
+        if(mDatas==null){
+            mDatas = new ArrayList<>();
+        }
+        mDatas.add(0,object);
+        notifyDataSetChanged();
+    }
+
+    public void changeData(List<T> datas){
+        mDatas = datas;
+        notifyDataSetChanged();
+    }
 
     public CommonAdapter(Context context, int layoutId, List<T> datas)
     {
@@ -26,6 +40,10 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<CommonViewHo
         mInflater = LayoutInflater.from(context);
         mLayoutId = layoutId;
         mDatas = datas;
+    }
+
+    public List<T> getmDatas(){
+        return mDatas;
     }
 
     @Override
@@ -38,10 +56,10 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<CommonViewHo
     @Override
     public void onBindViewHolder(CommonViewHolder holder, int position)
     {
-        convert(holder, mDatas.get(position));
+        convert(holder, mDatas.get(position),position);
     }
 
-    public abstract void convert(CommonViewHolder holder, T t);
+    public abstract void convert(CommonViewHolder holder, T t,int posation);
 
     @Override
     public int getItemCount()

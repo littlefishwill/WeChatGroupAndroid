@@ -1,10 +1,24 @@
 <resources>
-    <string name="app_name">WeChatHelp</string>
+    <string name="app_name">微信精灵</string>
     <string name="action_settings">Settings</string>
-
-    <string name="access_service_switch_name">微问服务</string>
+    <string name="action_qa_title">问答功能</string>
+    <string name="action_qa_answer_title">问答结果</string>
+    <string name="access_service_switch_name">微信精灵</string>
     <string name="access_service_des">您需要激活此服务，才可以正常使用本软件</string>
 
     <string name="transition_dialog">transition_dialog</string>
 
+    <string name="qa_addlibrary_title">请输入题库名称（例如：九三班英语考试）</string>
+
+    <string name="qa_addlibrary_author">请输入作者（例如：张三）</string>
+    <string name="qa_questions_root_folder_name">WXJL</string>
+    <string name="qa_questions_file_enddes">.wxjlqa</string>
+
+    <string name="qa_addquestion_title_qa">输入题目（例如：老虎是食肉动物吗？）</string>
+
+    <string name="qa_addquestion_title_qa_result">输入正确答案（例如：是,是的，Yes）</string>
+    <string name="qa_addquestion_title_qa_result_tips">Tip：多个答案匹配请用“，”号隔开</string>
+    <string name="qa_addquestion_title_qa_source">输入题目得分（1-100）</string>
+
+    <string name="qa_addquestion_title_qa_time">答题时间（1-10000） 单位“秒”</string>
 </resources>

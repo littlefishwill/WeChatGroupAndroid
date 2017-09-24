@@ -73,7 +73,7 @@ public class WeChatUtils {
                     }
                     break;
                 case AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED:
-                    if (cacheWeChatGroup!=null && event.getClassName().equals("android.widget.TextView")) {
+                    if (cacheWeChatGroup!=null) {
                         checkIsInChatPage(weChatBaseListener);
                     }
                     break;

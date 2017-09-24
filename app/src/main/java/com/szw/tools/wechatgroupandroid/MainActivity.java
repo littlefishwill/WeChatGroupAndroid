@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.szw.tools.wechatgroupandroid.fragment.action.ActionListFragment;
+import com.szw.tools.wechatgroupandroid.pages.actionlist.ActionListFragment;
 import com.szw.tools.wechatgroupandroid.service.PhoneActivityService;
 import com.szw.tools.wechatgroupandroid.service.StartService;
 import com.szw.tools.wechatgroupandroid.user.User;
@@ -33,9 +33,11 @@ public class MainActivity extends BaseActivity {
     private ScaleTextView switchDes;
     private BaseFragment actionListFragment;
     private FloatingActionButton serviceSwitch;
+    private static BaseActivity cacheActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        cacheActivity = this;
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -68,7 +70,7 @@ public class MainActivity extends BaseActivity {
                         helpSwitch.setVisibility(View.VISIBLE);
                         helpSwitch.startRippleAnimation();
                         switchDes.animateText("已开启，正常运行中~");
-                    }else{
+                    } else {
                         helpSwitch.setVisibility(View.INVISIBLE);
                         helpSwitch.startRippleAnimation();
                         switchDes.animateText("已关闭,点击小红钮可开启~");
@@ -159,6 +161,12 @@ public class MainActivity extends BaseActivity {
             return true;
         }
         return false;
+    }
+
+    public static void finishS(){
+        if(cacheActivity!=null){
+            cacheActivity.finish();
+        }
     }
 
 }

@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.szw.tools.wechatgroupandroid"
-        minSdkVersion 9
+        minSdkVersion 14
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -29,4 +29,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.+'
     compile 'com.google.code.gson:gson:2.7'
     // jCenter
+
+    compile 'com.android.support:cardview-v7:24.0.+'
+    compile 'com.github.clans:fab:1.6.4'
 }

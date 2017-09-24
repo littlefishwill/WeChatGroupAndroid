@@ -3,6 +3,7 @@ package com.szw.tools.wechatgroupandroid.service;
 import android.accessibilityservice.AccessibilityService;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -11,7 +12,10 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 
+import com.szw.tools.wechatgroupandroid.MainActivity;
 import com.szw.tools.wechatgroupandroid.WeChatAdnroidGroup;
+import com.szw.tools.wechatgroupandroid.quicktool.QuickTollActivity;
+import com.szw.tools.wechatgroupandroid.quicktool.QuickTollBar;
 import com.szw.tools.wechatgroupandroid.service.domain.WeChat;
 import com.szw.tools.wechatgroupandroid.user.UserManager;
 
@@ -55,12 +59,18 @@ public class PhoneActivityService extends AccessibilityService {
         WeChatUtils.getInstance().onEnterTell(event,new WeChatUtils.WeChatBaseListener<WeChat>(){
             @Override
             public void onGet(WeChat object) {
-                Toast.makeText(WeChatAdnroidGroup.getInstance(),object.getName(),Toast.LENGTH_LONG).show();
+//                Toast.makeText(WeChatAdnroidGroup.getInstance(),object.getName(),Toast.LENGTH_LONG).show();
+//                MainActivity.finishS();
+//                Intent qucickToll = new Intent(PhoneActivityService.this, QuickTollActivity.class);
+//                qucickToll.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(qucickToll);
+                QuickTollBar.getInstance(WeChatAdnroidGroup.getInstance()).showAlways();
             }
 
             @Override
             public void onExit() {
-                Toast.makeText(WeChatAdnroidGroup.getInstance(),"退出群聊",Toast.LENGTH_LONG).show();
+//                Toast.makeText(WeChatAdnroidGroup.getInstance(),"退出群聊",Toast.LENGTH_LONG).show();
+                QuickTollBar.getInstance(WeChatAdnroidGroup.getInstance()).cancel();
             }
         });
     }

@@ -1,4 +1,4 @@
-package com.szw.tools.wechatgroupandroid.fragment.domain;
+package com.szw.tools.wechatgroupandroid.pages.actionlist.domain;
 
 /**
  * Created by SuZhiwei on 2017/9/21.

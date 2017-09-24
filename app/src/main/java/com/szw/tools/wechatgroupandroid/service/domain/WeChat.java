@@ -1,5 +1,8 @@
 package com.szw.tools.wechatgroupandroid.service.domain;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by SuZhiwei on 2017/9/22.
  */
@@ -10,11 +13,16 @@ public class WeChat {
 
     public String getName() {
         if (name.endsWith(")") && name.contains("(")){
-            String[] split = name.split("\\(");
-            if (split.length == 2) {
-                return split[0];
-            } else {
-//                name.split("")
+            Pattern p1 = Pattern.compile("\\S+\\((\\d+)\\)$");
+            Matcher m = p1.matcher(name);
+            if(m.find())
+            {
+                isGroup = true;
+                number = Integer.parseInt(m.group(1));
+                System.out.println(m.group(1));
+                int start = m.start(1);
+                String groupName = name.substring(0,start-1);
+                return groupName;
             }
         }
         return name;

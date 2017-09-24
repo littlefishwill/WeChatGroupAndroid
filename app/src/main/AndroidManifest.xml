@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.szw.tools.wechatgroupandroid">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <application
         android:allowBackup="true"
         android:name=".WeChatAdnroidGroup"
@@ -27,6 +29,33 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
+        </activity>
+
+        <activity
+            android:name=".pages.qa.AddQuestionQaActivity"
+            android:parentActivityName=".pages.qa.QuestionsShowAvtivity"
+            android:theme="@style/AppTheme.Dialog">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+
+        <activity
+            android:name=".pages.qa.AddQuestionLibraryActivity"
+            android:parentActivityName=".pages.qa.QaActivity"
+            android:theme="@style/AppTheme.Dialog" android:windowSoftInputMode="adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+
+        <activity android:name=".pages.qa.QaActivity" android:label="@string/action_qa_title"></activity>
+
+        <activity android:name=".pages.qa.QuestionsShowAvtivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity android:name=".quicktool.QuickTollActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
         </activity>
 
         <service android:name=".service.StartService" android:enabled="true"></service>

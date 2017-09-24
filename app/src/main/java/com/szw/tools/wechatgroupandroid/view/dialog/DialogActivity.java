@@ -12,10 +12,11 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 
+import com.szw.tools.wechatgroupandroid.BaseActivity;
 import com.szw.tools.wechatgroupandroid.MainActivity;
 import com.szw.tools.wechatgroupandroid.R;
 
-public class DialogActivity extends AppCompatActivity {
+public class DialogActivity extends BaseActivity {
 
     private ViewGroup container;
 
@@ -27,7 +28,7 @@ public class DialogActivity extends AppCompatActivity {
         container = (ViewGroup) findViewById(R.id.container);
 
         //方式一
-        setupSharedEelementTransitions1();
+        setupSharedEelementTransitions1(container);
         //方式二
 //        setupSharedEelementTransitions2();
 
@@ -46,65 +47,6 @@ public class DialogActivity extends AppCompatActivity {
                 finishAfterTransition();
             }
         });
-    }
-
-    /**
-     * 使用方式一：调用setupSharedEelementTransitions1方法
-     * 使用这种方式的话需要的类是 MorphDrawable, MorphFabToDialog, MorphDialogToFab
-     */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public void setupSharedEelementTransitions1() {
-        ArcMotion arcMotion = new ArcMotion();
-        arcMotion.setMinimumHorizontalAngle(50f);
-        arcMotion.setMinimumVerticalAngle(50f);
-
-        Interpolator easeInOut = AnimationUtils.loadInterpolator(this, android.R.interpolator.fast_out_slow_in);
-
-        MorphFabToDialog sharedEnter = new MorphFabToDialog();
-        sharedEnter.setPathMotion(arcMotion);
-        sharedEnter.setInterpolator(easeInOut);
-
-        MorphDialogToFab sharedReturn = new MorphDialogToFab();
-        sharedReturn.setPathMotion(arcMotion);
-        sharedReturn.setInterpolator(easeInOut);
-
-        if (container != null) {
-            sharedEnter.addTarget(container);
-            sharedReturn.addTarget(container);
-        }
-        getWindow().setSharedElementEnterTransition(sharedEnter);
-        getWindow().setSharedElementReturnTransition(sharedReturn);
-    }
-
-    /**
-     * 使用方式二：调用setupSharedEelementTransitions2方法
-     * 使用这种方式的话需要的类是 MorphDrawable, MorphTransition
-     */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public void setupSharedEelementTransitions2() {
-        ArcMotion arcMotion = new ArcMotion();
-        arcMotion.setMinimumHorizontalAngle(50f);
-        arcMotion.setMinimumVerticalAngle(50f);
-
-        Interpolator easeInOut = AnimationUtils.loadInterpolator(this, android.R.interpolator.fast_out_slow_in);
-
-        //hujiawei 100是随意给的一个数字，可以修改，需要注意的是这里调用container.getHeight()结果为0
-        MorphTransition sharedEnter = new MorphTransition(ContextCompat.getColor(this, R.color.fab_background_color),
-                ContextCompat.getColor(this, R.color.dialog_background_color), 100, getResources().getDimensionPixelSize(R.dimen.dialog_corners), true);
-        sharedEnter.setPathMotion(arcMotion);
-        sharedEnter.setInterpolator(easeInOut);
-
-        MorphTransition sharedReturn = new MorphTransition(ContextCompat.getColor(this, R.color.dialog_background_color),
-                ContextCompat.getColor(this, R.color.fab_background_color), getResources().getDimensionPixelSize(R.dimen.dialog_corners), 100,  false);
-        sharedReturn.setPathMotion(arcMotion);
-        sharedReturn.setInterpolator(easeInOut);
-
-        if (container != null) {
-            sharedEnter.addTarget(container);
-            sharedReturn.addTarget(container);
-        }
-        getWindow().setSharedElementEnterTransition(sharedEnter);
-        getWindow().setSharedElementReturnTransition(sharedReturn);
     }
 
     @Override
