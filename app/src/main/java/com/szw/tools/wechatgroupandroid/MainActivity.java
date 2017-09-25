@@ -150,6 +150,7 @@ public class MainActivity extends BaseActivity {
         if(b){
             int i = DpOrPx.dip2px(MainActivity.this, 180f);
             if(appBarLayout.getHeight()==i){
+                switchDes.animateText("已开启，正常运行中~");
                 return;
             }
            va = ValueAnimator.ofInt(appBarLayout.getHeight(), i);
