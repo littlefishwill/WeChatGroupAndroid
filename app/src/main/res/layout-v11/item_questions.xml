@@ -20,7 +20,7 @@
             <TextView
                 android:id="@+id/tv_qa_item_title"
                 android:layout_width="wrap_content"
-                android:text=""
+                android:text="" android:layout_marginRight="100dip" android:singleLine="true"
                 android:layout_height="wrap_content" android:layout_marginLeft="30dp"
                 android:textSize="17sp"  android:textColor="#4D4D4D"  android:layout_marginTop="7dip" />
 
@@ -38,11 +38,22 @@
                 android:layout_height="wrap_content" android:layout_marginLeft="150dp"
                 android:textSize="12sp"  android:textColor="#4D4D4D"  android:layout_marginTop="35dip" />
 
+            <ImageView android:layout_alignParentRight="true" android:layout_centerVertical="true"
+                android:layout_width="30dip" android:layout_marginRight="70dp"
+                android:layout_height="30dip" android:src="@mipmap/qa_library_edit" />
+
+
+            <ImageView
+                android:id="@+id/iv_qa_play"
+                android:layout_alignParentRight="true" android:layout_centerVertical="true"
+                android:layout_width="30dip" android:layout_marginRight="20dp"
+                android:layout_height="30dip" android:src="@mipmap/qa_play" />
+
 
             <ImageView
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:layout_width="25dp"
+                android:layout_width="25dp" android:visibility="gone"
                 android:layout_height="25dp" android:layout_marginRight="20dp"
                 android:src="@drawable/right_jt" />
 

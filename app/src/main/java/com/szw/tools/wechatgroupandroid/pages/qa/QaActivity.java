@@ -12,6 +12,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -98,7 +99,17 @@ public class QaActivity extends BaseActivity {
                             layoutParams.setMargins(0, 1, 0, 0);
                         }
 
-
+                        ImageView play = holder.getView(R.id.iv_qa_play);
+                        play.setOnClickListener(new View.OnClickListener() {
+                            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(QaActivity.this, PlayQuestionActivity.class);
+                                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(QaActivity.this, v, getString(R.string.transition_dialog));
+                                intent.putExtra("data",questionses.get(posation));
+                                startActivityForResult(intent, 1, options.toBundle());
+                            }
+                        });
                     }
                 };
                 questionsList.setAdapter(questionsAdapter);

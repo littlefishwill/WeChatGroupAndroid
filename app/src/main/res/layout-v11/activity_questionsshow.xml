@@ -6,83 +6,94 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="#EBEBEB"
-    >
+    android:background="#EBEBEB" android:clipChildren="false"
+    tools:context=".pages.qa.QuestionsShowAvtivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dip"
-        android:theme="@style/AppTheme.AppBarOverlay" android:gravity="center_horizontal">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_width="match_parent" android:titleTextColor="@android:color/white"
+            android:layout_height="70dip"
             android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    </android.support.design.widget.AppBarLayout>
+        <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" android:clipChildren="false" android:gravity="center_vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_qa_questions"
-        android:layout_width="match_parent" android:layout_marginTop="120dp"
-        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+</RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"  android:layout_marginTop="100dip">
-    <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/menu_fab" android:layout_alignParentRight="true" android:layout_marginRight="10dip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        fab:menu_fab_size="normal"
-        fab:menu_showShadow="true"
-        fab:menu_shadowColor="#66000000"
-        fab:menu_shadowRadius="4dp"
-        fab:menu_shadowXOffset="1dp"
-        fab:menu_shadowYOffset="3dp"
-        fab:menu_colorNormal="#DA4336"
-        fab:menu_colorPressed="#E75043"
-        fab:menu_colorRipple="#99FFFFFF"
-        fab:menu_animationDelayPerItem="50"
-        fab:menu_icon="@drawable/fab_add"
-        fab:menu_buttonSpacing="0dp"
-        fab:menu_labels_margin="0dp"
-        fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
-        fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
-        fab:menu_labels_textColor="#FFFFFF"
-        fab:menu_labels_textSize="14sp"
-        fab:menu_labels_cornerRadius="3dp"
-        fab:menu_labels_colorNormal="#333333"
-        fab:menu_labels_colorPressed="#444444"
-        fab:menu_labels_colorRipple="#66FFFFFF"
-        fab:menu_labels_showShadow="true"
-        fab:menu_labels_singleLine="false"
-        fab:menu_labels_ellipsize="none"
-        fab:menu_labels_maxLines="-1"
-        fab:menu_labels_position="left"
-        fab:menu_openDirection="down"
-        fab:menu_backgroundColor="@android:color/transparent"
-        fab:menu_fab_label="请选择添加 题目类型">
+        android:layout_height="match_parent" android:layout_marginTop="65dp">
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/menu_choose"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_qa_questions"
+        android:layout_width="match_parent" android:paddingTop="20dip"
+        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+        <View android:layout_marginTop="-15dp"
+        android:id="@+id/v_fix_fab_hiddle_click" android:visibility="gone"
+        android:layout_width="60dip" android:layout_alignParentRight="true" android:layout_marginRight="17dp"
+        android:layout_height="40dip" ></View>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"  android:layout_marginTop="20dp">
+        <com.github.clans.fab.FloatingActionMenu
+            android:id="@+id/menu_fab" android:layout_alignParentRight="true" android:layout_marginRight="10dip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/star_on"
-            fab:fab_size="mini"
-            fab:fab_label="选择题" />
+            fab:menu_fab_size="normal"
+            fab:menu_showShadow="true"
+            fab:menu_shadowColor="#66000000"
+            fab:menu_shadowRadius="4dp"
+            fab:menu_shadowXOffset="1dp"
+            fab:menu_shadowYOffset="3dp"
+            fab:menu_colorNormal="#DA4336"
+            fab:menu_colorPressed="#E75043"
+            fab:menu_colorRipple="#99FFFFFF"
+            fab:menu_animationDelayPerItem="50"
+            fab:menu_icon="@drawable/fab_add"
+            fab:menu_buttonSpacing="0dp"
+            fab:menu_labels_margin="0dp"
+            fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
+            fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
+            fab:menu_labels_textColor="#FFFFFF"
+            fab:menu_labels_textSize="14sp"
+            fab:menu_labels_cornerRadius="3dp"
+            fab:menu_labels_colorNormal="#333333"
+            fab:menu_labels_colorPressed="#444444"
+            fab:menu_labels_colorRipple="#66FFFFFF"
+            fab:menu_labels_showShadow="true"
+            fab:menu_labels_singleLine="false"
+            fab:menu_labels_ellipsize="none"
+            fab:menu_labels_maxLines="-1"
+            fab:menu_labels_position="left"
+            fab:menu_openDirection="down"
+            fab:menu_backgroundColor="@android:color/transparent"
+            fab:menu_fab_label="请选择添加 题目类型">
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/menu_qa"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_add"
-            fab:fab_size="mini"
-            fab:fab_label="问答题" />
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/menu_choose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/star_on"
+                fab:fab_size="mini"
+                fab:fab_label="选择题" />
 
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/menu_qa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/qa_wen"
+                fab:fab_size="mini"
+                fab:fab_label="问答题" />
 
-    </com.github.clans.fab.FloatingActionMenu>
+        </com.github.clans.fab.FloatingActionMenu>
     </RelativeLayout>
 
 

@@ -34,25 +34,61 @@ public class QuestionsShowAvtivity extends BaseActivity {
     private Questions questions;
     private RecyclerView questionsRv;
     private CommonAdapter questionAdapter;
+    private  ActionBar actionBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_questionsshow);
+        questions = (Questions) getIntent().getSerializableExtra("data");
         questionsRv = (RecyclerView) findViewById(R.id.rv_qa_questions);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
+        actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);//设置返回箭头显示
-        questions = (Questions) getIntent().getSerializableExtra("data");
         actionBar.setTitle(questions.getTitle());//父标题
 
+
         floatingActionMenu = (FloatingActionMenu) findViewById(R.id.menu_fab);
+        floatingActionMenu.bringToFront();
         qaQ = (FloatingActionButton) findViewById(R.id.menu_qa);
         chQ = (FloatingActionButton) findViewById(R.id.menu_choose);
         addQustionLogic();
         questionList();
+        totleLogic();
 
+    }
+
+    private void totleLogic() {
+        int sourceTotle = 0;
+        long totleTime = 0;
+        for(Question question:questions.getQuestions()){
+            sourceTotle = sourceTotle+ question.getSource();
+            totleTime = totleTime+ question.getTime();
+        }
+
+        actionBar.setSubtitle("(共"+questions.getQuestions().size()+"题)"+"(卷分"+sourceTotle+")(卷时"+formatSeconds(totleTime/1000)+")");
+    }
+
+    public static String formatSeconds(long seconds) {
+        String timeStr = seconds + "秒";
+        if (seconds > 60) {
+            long second = seconds % 60;
+            long min = seconds / 60;
+            timeStr = min + "分" + second + "秒";
+            if (min > 60) {
+                min = (seconds / 60) % 60;
+                long hour = (seconds / 60) / 60;
+                timeStr = hour + "小时" + min + "分" + second + "秒";
+                if (hour > 24) {
+                    hour = ((seconds / 60) / 60) % 24;
+                    long day = (((seconds / 60) / 60) / 24);
+                    timeStr = day + "天" + hour + "小时" + min + "分" + second + "秒";
+                }
+            }
+        }
+        return timeStr;
     }
 
     private void questionList() {
@@ -90,6 +126,7 @@ public class QuestionsShowAvtivity extends BaseActivity {
                                         questions.getQuestions().remove(posation);
                                         QaManager.getInstance().saveQuestions(questions);
                                         questionAdapter.notifyDataSetChanged();
+                                        totleLogic();
                                         //...To-do
 //                                        QaManager.getInstance().delectQuestions((Questions) questionsAdapter.getmDatas().get(postation));
 //                                        questionsAdapter.getmDatas().remove(postation);
@@ -120,6 +157,8 @@ public class QuestionsShowAvtivity extends BaseActivity {
                         startActivityForResult(intent, 1, options.toBundle());
                     }
                 });
+
+
             }
         };
         questionsRv.setAdapter(questionAdapter);
@@ -132,7 +171,7 @@ public class QuestionsShowAvtivity extends BaseActivity {
             Questions questions = (Questions) data.getSerializableExtra("data");
             QuestionsShowAvtivity.this.questions = questions;
             questionAdapter.changeData(questions.getQuestions());
-
+            totleLogic();
         }
     }
 
@@ -155,6 +194,17 @@ public class QuestionsShowAvtivity extends BaseActivity {
         return str;
     }
     private void addQustionLogic() {
+        findViewById(R.id.v_fix_fab_hiddle_click).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(floatingActionMenu.isOpened()){
+                    floatingActionMenu.close(true);
+                }else{
+                    floatingActionMenu.open(true);
+                }
+            }
+        });
+
         View.OnClickListener listener = new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override

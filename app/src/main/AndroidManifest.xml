@@ -41,6 +41,15 @@
         </activity>
 
         <activity
+            android:name=".pages.qa.PlayQuestionActivity"
+            android:parentActivityName=".pages.qa.QaActivity"
+            android:theme="@style/AppTheme.Dialog">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+
+        <activity
             android:name=".pages.qa.AddQuestionLibraryActivity"
             android:parentActivityName=".pages.qa.QaActivity"
             android:theme="@style/AppTheme.Dialog" android:windowSoftInputMode="adjustResize">
