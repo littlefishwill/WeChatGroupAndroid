@@ -100,6 +100,13 @@ public class QaActivity extends BaseActivity {
                         }
 
                         ImageView play = holder.getView(R.id.iv_qa_play);
+
+                        if(questions.getId().equals(QaManager.getInstance().getOpenQusetions().getId())){
+                            play.setImageResource(R.drawable.qa_stop);
+                        }else{
+                            play.setImageResource(R.mipmap.qa_play);
+                        }
+
                         play.setOnClickListener(new View.OnClickListener() {
                             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
                             @Override
@@ -167,6 +174,8 @@ public class QaActivity extends BaseActivity {
         if(requestCode==1 && resultCode==1){
             Questions questions = (Questions) data.getSerializableExtra("data");
             questionsAdapter.addDoamin(questions);
+        }else if(requestCode==1 && resultCode==2){
+            questionsAdapter.notifyDataSetChanged();
         }
     }
 

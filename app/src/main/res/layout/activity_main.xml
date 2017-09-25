@@ -8,8 +8,9 @@
     tools:context="com.szw.tools.wechatgroupandroid.MainActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/abl_switch_contain"
         android:layout_width="match_parent"
-        android:layout_height="180dip"
+        android:layout_height="match_parent"
         android:theme="@style/AppTheme.AppBarOverlay" android:gravity="center_horizontal">
 
         <android.support.v7.widget.Toolbar
@@ -21,12 +22,15 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:layout_marginTop="-50dp" android:layout_gravity="center">
+            android:layout_height="match_parent" android:layout_marginTop="-50dp" android:layout_gravity="center">
 
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="180dip" android:layout_centerInParent="true">
             <com.szw.tools.wechatgroupandroid.view.RippleView
                 android:id="@+id/ripp_view_main_switchopen"
                 android:layout_width="180dip"
-                android:layout_centerHorizontal="true"
+                android:layout_centerHorizontal="true" android:layout_centerInParent="true"
                 android:layout_height="180dip"  />
 
             <android.support.design.widget.FloatingActionButton
@@ -40,11 +44,11 @@
             <com.szw.tools.wechatgroupandroid.view.htext.ScaleTextView
                 android:id="@+id/sctv_main_switch_des" android:gravity="center_horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=""   android:layout_marginBottom="20dp" android:layout_marginTop="130dp"
+                android:layout_height="wrap_content" android:layout_alignParentBottom="true"
+                android:text=""   android:layout_marginBottom="20dp" android:layout_marginTop="-130dp"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"/>
-
+            </RelativeLayout>
         </RelativeLayout>
 
 

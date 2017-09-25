@@ -6,21 +6,27 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.szw.tools.wechatgroupandroid.BaseActivity;
 import com.szw.tools.wechatgroupandroid.MainActivity;
 import com.szw.tools.wechatgroupandroid.R;
+import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Questions;
 
 public class PlayQuestionActivity extends BaseActivity {
 
     private ViewGroup container;
-
+    private Questions questions;
+    private Button submit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dialog);
-
+        setContentView(R.layout.activity_play_question);
+        submit = (Button)findViewById(R.id.close);
+        questions = (Questions) getIntent().getSerializableExtra("data");
         container = (ViewGroup) findViewById(R.id.container);
+
+        switchLogic();
 
         //方式一
         setupSharedEelementTransitions1(container);
@@ -34,14 +40,28 @@ public class PlayQuestionActivity extends BaseActivity {
             }
         };
         container.setOnClickListener(dismissListener);
-        container.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
+        submit.setOnClickListener(new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
-                setResult(MainActivity.Request_Dialog_Res_Success);
+                if(QaManager.getInstance().getOpenQusetions().getId().equals(questions.getId())){
+                    QaManager.getInstance().setOpenQusetions(null);
+                }else{
+                    QaManager.getInstance().setOpenQusetions(questions);
+                }
+
+                setResult(2);
                 finishAfterTransition();
             }
         });
+    }
+
+    private void switchLogic() {
+        if(QaManager.getInstance().getOpenQusetions().getId().equals(questions.getId())){
+            submit.setText("停止问答");
+        }else{
+            submit.setText("开始问答");
+        }
     }
 
     @Override

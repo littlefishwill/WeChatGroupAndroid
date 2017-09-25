@@ -26,14 +26,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="需手动开启服务"
+            android:text="微信问答详细"
             android:textAppearance="?android:textAppearanceLarge"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="如果您期望正常使用该软件.\n请前往'系统设置->辅助功能->无障碍->微问服务->选择并开启.'"
+            android:text="开启后，请手动进入任意微信聊天界面,系统会默认10秒自动内发送题目，开始问答。'"
             android:textAppearance="?android:textAppearanceMedium"/>
 
         <Button

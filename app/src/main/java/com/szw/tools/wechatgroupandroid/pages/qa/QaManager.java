@@ -28,6 +28,10 @@ public class QaManager extends Manager {
     private static QaManager qaManager;
     private static File rootFile = new File(Environment.getExternalStorageDirectory(), WeChatAdnroidGroup.getInstance().getString(R.string.qa_questions_root_folder_name));
     private static String endDes = WeChatAdnroidGroup.getInstance().getString(R.string.qa_questions_file_enddes);
+    /**
+     * 开启问答的 题库
+     */
+    private Questions openQusetions;
     public static QaManager  getInstance(){
         if(qaManager==null){
             qaManager = new QaManager();
@@ -134,5 +138,16 @@ public class QaManager extends Manager {
     @Override
     public void init() {
 
+    }
+
+    public Questions getOpenQusetions() {
+        if(openQusetions==null){
+            openQusetions = new Questions();
+        }
+        return openQusetions;
+    }
+
+    public void setOpenQusetions(Questions openQusetions) {
+        this.openQusetions = openQusetions;
     }
 }
