@@ -103,6 +103,11 @@ public class QaManager extends Manager {
         return 1;
     }
     public int saveQuestions(Questions questions){
+        if(cacheCursorMap.get(questions.getId())==null){
+            cacheQuestiones.add(questions);
+        }
+        cacheCursorMap.put(questions.getId(),questions);
+
         //创建文件
         File questionFile = getQuestionFile(questions);
         if(!questionFile.getParentFile().exists()){
@@ -149,4 +154,7 @@ public class QaManager extends Manager {
 
     }
 
+    public List<Questions> getCacheQuestiones() {
+        return cacheQuestiones;
+    }
 }

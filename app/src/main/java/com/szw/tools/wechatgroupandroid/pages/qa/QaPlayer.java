@@ -22,6 +22,7 @@ public class QaPlayer {
     private QaIng qaIng;
     long progressTime = 0;
     public void play(QaPlayListenerListener qapl, WeChat wct){
+        quitePlay();
         this.qaPlayListenerListener = qapl;
         this.weChat = wct;
         QaIngManager.getInstance().loadQaIng(new QaIngLoadListener() {
@@ -80,8 +81,11 @@ public class QaPlayer {
     }
 
     public void quitePlay(){
-        countDownTimer.cancel();
-        saveProgress();
+        if(countDownTimer!=null) {
+            countDownTimer.cancel();
+            saveProgress();
+        }
+
     }
 
     private CountDownTimer countDownTimer;
@@ -130,6 +134,7 @@ public class QaPlayer {
     }
 
     public  void saveProgress(){
+        qaIng_question = new QaIng_Question();
         qaIng_question.setCurrent(currentPlayPos);
         qaIng_question.setUseTime(keepTime);
         qaIng.getQaings().put(weChat.getName(), qaIng_question);

@@ -18,7 +18,7 @@
     <color name="dialog_background_color">#fafafa</color>
     <color name="dialog_background_scrim">#99323232</color>
 
-    <color name="colorPrimary_bar_tool">#60FFFFFF</color>
+    <color name="colorPrimary_bar_tool">#90FFFFFF</color>
 
 
 </resources>

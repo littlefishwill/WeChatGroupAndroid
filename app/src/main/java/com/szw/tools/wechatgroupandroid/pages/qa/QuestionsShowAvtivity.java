@@ -41,6 +41,7 @@ public class QuestionsShowAvtivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_questionsshow);
         questions = (Questions) getIntent().getSerializableExtra("data");
+        questions = QaManager.getInstance().getQuestionsWithId(questions.getId());
         questionsRv = (RecyclerView) findViewById(R.id.rv_qa_questions);
 
 
@@ -140,8 +141,6 @@ public class QuestionsShowAvtivity extends BaseActivity {
                         startActivityForResult(intent, 1, options.toBundle());
                     }
                 });
-
-
             }
         };
         questionsRv.setAdapter(questionAdapter);
@@ -151,9 +150,9 @@ public class QuestionsShowAvtivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==1 && resultCode==2){
-            Questions questions = (Questions) data.getSerializableExtra("data");
-            QuestionsShowAvtivity.this.questions = questions;
-            questionAdapter.changeData(questions.getQuestions());
+//            Questions questions = (Questions) data.getSerializableExtra("data");
+//            QuestionsShowAvtivity.this.questions = questions;
+            questionAdapter.notifyDataSetChanged();
             totleLogic();
         }
     }
@@ -166,10 +165,6 @@ public class QuestionsShowAvtivity extends BaseActivity {
         for(String s:arrs){
             str = str+ s +",";
         }
-//
-//        for(String s:arrs){
-//            str = str+"(" +s+")";
-//        }
 
         if(str.endsWith(",") || str.endsWith("，")){
             str = str.substring(0,str.length()-1);

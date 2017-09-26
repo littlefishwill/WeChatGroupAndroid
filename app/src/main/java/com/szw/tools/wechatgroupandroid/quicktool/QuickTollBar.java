@@ -1,6 +1,7 @@
 package com.szw.tools.wechatgroupandroid.quicktool;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -13,6 +14,7 @@ import com.szw.tools.wechatgroupandroid.R;
 import com.szw.tools.wechatgroupandroid.WeChatAdnroidGroup;
 import com.szw.tools.wechatgroupandroid.pages.qa.QaIngManager;
 import com.szw.tools.wechatgroupandroid.pages.qa.QaManager;
+import com.szw.tools.wechatgroupandroid.pages.qa.QuestionsShowAvtivity;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Question;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Questions;
 import com.szw.tools.wechatgroupandroid.pages.qa.listener.QaPlayListenerListener;
@@ -32,13 +34,7 @@ public class QuickTollBar  extends Toast{
         }
         return quickTollBar;
     }
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            show();
-        }
-    };
+
     private QuickTollBar(Context context) {
         super(context);
         view = LayoutInflater.from(context).inflate(R.layout.bar_quick_tool, null);
@@ -50,13 +46,14 @@ public class QuickTollBar  extends Toast{
         setView(view);
     }
 
-    private TextView titleQa,tips,times,qades;
+    private TextView titleQa,tips,times,qades,qaanswer;
 
     private void QaLogic(View view) {
         titleQa = (TextView) view.findViewById(R.id.tv_qa_bar_title);
         tips = (TextView) view.findViewById(R.id.tv_qa_bar_tips);
         times = (TextView) view.findViewById(R.id.tv_qa_bar_time);
         qades = (TextView) view.findViewById(R.id.tv_qa_bar_qa_des);
+        qaanswer = (TextView) view.findViewById(R.id.tv_qa_bar_answer);
 
         View qaContain= view.findViewById(R.id.qa_bar_contain);
         Questions openQusetions = QaIngManager.getInstance().getQaNowQuestions();
@@ -85,44 +82,67 @@ public class QuickTollBar  extends Toast{
     public void cancel() {
         super.cancel();
         isCancle = true;
+        if(showAsyncTask!=null){
+            showAsyncTask.cancel(true);
+        }
         QaIngManager.getInstance().getQaPlayer().quitePlay();
-        handler.removeCallbacksAndMessages(null);
+        quickTollBar = null;
+
     }
 
+    private AsyncTask showAsyncTask = null;
     @Override
     public void show() {
         super.show();
        if(!isCancle){
-           handler.sendEmptyMessageDelayed(0,3000);
+           if(showAsyncTask!=null) {
+               showAsyncTask.cancel(true);
+           }
+           showAsyncTask = new AsyncTask() {
+               @Override
+               protected Object doInBackground(Object[] params) {
+                   try {
+                       Thread.sleep(2500);
+                   } catch (InterruptedException e) {
+                       e.printStackTrace();
+                   }
+                   return null;
+               }
+
+               @Override
+               protected void onPostExecute(Object o) {
+                   super.onPostExecute(o);
+                   if(!isCancle) {
+                       show();
+                   }
+               }
+           };
+           showAsyncTask.execute();
        }
     }
 
     public void showAlways(){
         isCancle = false;
         QaLogic(view);
-        show();
         QaIngManager.getInstance().getQaPlayer().play(new QaPlayListenerListener() {
             @Override
             public void onReady(Questions questions, int current, long currentTime, String tip) {
                 qades.setText("等待开始");
-                times.setText(TimeFormatUtils.formatSeconds(currentTime/1000));
+                times.setText(TimeFormatUtils.formatSecondsUseCode(currentTime / 1000));
                 tips.setText(tip);
-//                if(times.getText().equals("9秒")) {
-//                    String des = "10秒后将开始答题，试卷为（"+questions.getTitle()+"）";
-//                    WeChatUtils.getInstance().sendText(des,true);
-//                }
             }
 
             @Override
             public void onTickChange(long tick, String tip) {
-                times.setText(TimeFormatUtils.formatSeconds(tick/1000));
+                times.setText(TimeFormatUtils.formatSecondsUseCode(tick / 1000));
             }
 
             @Override
-            public void onNext(Question question,int pos) {
-                qades.setText(pos+1+"."+question.getDes());
+            public void onNext(Question question, int pos) {
+                qades.setText(pos + 1 + "." + question.getDes());
                 tips.setText("剩余");
-                WeChatUtils.getInstance().sendText(question.getDes(),true);
+                qaanswer.setText("答案：" + QuestionsShowAvtivity.getString(question.getType2Answer()));
+                WeChatUtils.getInstance().sendText(pos + 1+"."+question.getDes()+"("+question.getSource()+"分)", true);
             }
 
             @Override
@@ -131,5 +151,6 @@ public class QuickTollBar  extends Toast{
                 tips.setText("");
             }
         }, WeChatUtils.getInstance().getCacheWeChatGroup());
+        show();
     }
 }

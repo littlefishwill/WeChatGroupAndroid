@@ -23,4 +23,24 @@ public class TimeFormatUtils {
         }
         return timeStr;
     }
+
+    public static String formatSecondsUseCode(long seconds) {
+        String timeStr = seconds + "\"";
+        if (seconds > 60) {
+            long second = seconds % 60;
+            long min = seconds / 60;
+            timeStr = min + "\'" + second + "\"";
+            if (min > 60) {
+                min = (seconds / 60) % 60;
+                long hour = (seconds / 60) / 60;
+                timeStr = hour + ":" + min + "'" + second + "\"";
+                if (hour > 24) {
+                    hour = ((seconds / 60) / 60) % 24;
+                    long day = (((seconds / 60) / 60) / 24);
+                    timeStr = day + "d" + hour + ":" + min + "\'" + second + "\"";
+                }
+            }
+        }
+        return timeStr;
+    }
 }

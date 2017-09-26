@@ -23,6 +23,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.Toast;
 
 import com.szw.tools.wechatgroupandroid.pages.actionlist.ActionListFragment;
+import com.szw.tools.wechatgroupandroid.pages.qa.QaManager;
 import com.szw.tools.wechatgroupandroid.service.PhoneActivityService;
 import com.szw.tools.wechatgroupandroid.service.StartService;
 import com.szw.tools.wechatgroupandroid.user.User;
@@ -59,7 +60,6 @@ public class MainActivity extends BaseActivity {
         serviceSwitch = (FloatingActionButton) findViewById(R.id.fab);
         appBarLayout = (AppBarLayout) findViewById(R.id.abl_switch_contain);
         switLayoutLogic();
-        actionListLogic();
 //
 
 
@@ -73,9 +73,18 @@ public class MainActivity extends BaseActivity {
                 fullHeightCardBar = appBarLayout.getHeight();
                 checkServiceStatue();
                 actionSwitch();
+                actionListLogic();
+                loadAllData();
                 appBarLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
+    }
+
+    /**
+     * 获取所有数据
+     */
+    private void loadAllData() {
+        QaManager.getInstance().loadQuesetions(null);
     }
 
     /**
@@ -149,9 +158,9 @@ public class MainActivity extends BaseActivity {
     private String getWelcomString(){
         User user = UserManager.getInstance().getUser();
         if(user.getUserName()==null || user.getUserName().length()<1){
-            return "Welcome";
+            return "欢迎您使用.";
         }else{
-            return "Welcome,"+user.getUserName();
+            return "欢迎您,"+user.getUserName()+".";
         }
     }
 

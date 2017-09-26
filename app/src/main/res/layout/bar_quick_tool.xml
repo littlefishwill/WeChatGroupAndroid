@@ -60,19 +60,17 @@
                     android:textColor="@color/colorPrimaryDark" android:textStyle="bold" android:layout_marginLeft="3dp"
                     android:layout_width="wrap_content" android:text="45" android:gravity="center"
                     android:layout_height="wrap_content" android:textSize="40dp" />
+
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:orientation="vertical">
-                <TextView android:layout_centerHorizontal="true"
-                    android:layout_width="wrap_content"  android:textColor="#414141" android:textStyle="bold"
-                    android:layout_height="wrap_content" android:text="问答命令（Tip:在输入框中输入即可执行）:" android:textSize="12dp" />
-
                 <TextView
+                    android:id="@+id/tv_qa_bar_answer"
                     android:layout_centerHorizontal="true" android:layout_marginTop="3dp"
                     android:layout_width="wrap_content"  android:textColor="@color/colorAccent" android:textStyle="bold"
-                    android:layout_height="wrap_content" android:text="暂停=P;开始=S;下一题=N;结束=E" android:textSize="12dp" />
+                    android:layout_height="wrap_content" android:text="" android:textSize="12dp" />
 
             </LinearLayout>
 

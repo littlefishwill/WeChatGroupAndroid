@@ -36,6 +36,7 @@ public class QaActivity extends BaseActivity {
     private RecyclerView questionsList;
     private CommonAdapter questionsAdapter;
     private SimpleDateFormat timeformat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+    private List<Questions>  questionses;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,78 +56,76 @@ public class QaActivity extends BaseActivity {
 
     }
 
-    private void showQuestionLibrary() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(questionsAdapter!=null){
+            questionsAdapter.notifyDataSetChanged();
+        }
+    }
 
+    private void showQuestionLibrary() {
+    questionses =  QaManager.getInstance().getCacheQuestiones();
     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
     questionsList.setLayoutManager(layoutManager);
-        QaManager.getInstance().loadQuesetions(new QuestiionLoadListener() {
+        questionsAdapter = new CommonAdapter<Questions>(QaActivity.this, R.layout.item_questions, questionses) {
             @Override
-            public void onLoad(int count, final List<Questions> questionses) {
-                questionsAdapter = new CommonAdapter<Questions>(QaActivity.this, R.layout.item_questions, questionses) {
+            public void convert(CommonViewHolder holder, Questions questions, final int posation) {
+                TextView title = holder.getView(R.id.tv_qa_item_title);
+                TextView author = holder.getView(R.id.tv_qa_item_author);
+                TextView time = holder.getView(R.id.tv_qa_item_time);
+                title.setText(questions.getTitle());
+                author.setText(questions.getAuthor());
+                time.setText(timeformat.format(questions.getCrreatTime()));
+
+                // long clcikListener
+                holder.getRootView().setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
-                    public void convert(CommonViewHolder holder, Questions questions, final int posation) {
-                        TextView title = holder.getView(R.id.tv_qa_item_title);
-                        TextView author = holder.getView(R.id.tv_qa_item_author);
-                        TextView time = holder.getView(R.id.tv_qa_item_time);
-                        title.setText(questions.getTitle());
-                        author.setText(questions.getAuthor());
-                        time.setText(timeformat.format(questions.getCrreatTime()));
-
-                        // long clcikListener
-                        holder.getRootView().setOnLongClickListener(new View.OnLongClickListener() {
-                            @Override
-                            public boolean onLongClick(View v) {
-                                onItemLongClickListener(posation);
-                                return false;
-                            }
-                        });
-
-                        holder.getRootView().setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(QaActivity.this, QuestionsShowAvtivity.class);
-                                intent.putExtra("data",(Questions)questionsAdapter.getmDatas().get(posation));
-                                startActivity(intent);
-                            }
-                        });
-
-                        // for layout
-                        CardView cardView = holder.getView(R.id.cv_questions);
-                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) cardView.getLayoutParams();
-                        if (posation == questionses.size() - 1) {
-                            layoutParams.setMargins(0, 1, 0, 3);
-                        } else {
-                            layoutParams.setMargins(0, 1, 0, 0);
-                        }
-
-                        ImageView play = holder.getView(R.id.iv_qa_play);
-
-                        if(questions.getId().equals(QaIngManager.getInstance().getQaNowQuestions().getId())){
-                            play.setImageResource(R.drawable.qa_stop);
-                        }else{
-                            play.setImageResource(R.mipmap.qa_play);
-                        }
-
-                        play.setOnClickListener(new View.OnClickListener() {
-                            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(QaActivity.this, PlayQuestionActivity.class);
-                                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(QaActivity.this, v, getString(R.string.transition_dialog));
-                                intent.putExtra("data",questionses.get(posation));
-                                startActivityForResult(intent, 1, options.toBundle());
-                            }
-                        });
+                    public boolean onLongClick(View v) {
+                        onItemLongClickListener(posation);
+                        return false;
                     }
-                };
-                questionsList.setAdapter(questionsAdapter);
-            }
+                });
 
-            @Override
-            public void onError(int code) {
+                holder.getRootView().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(QaActivity.this, QuestionsShowAvtivity.class);
+                        intent.putExtra("data",(Questions)questionsAdapter.getmDatas().get(posation));
+                        startActivity(intent);
+                    }
+                });
 
+                // for layout
+                CardView cardView = holder.getView(R.id.cv_questions);
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) cardView.getLayoutParams();
+                if (posation == questionses.size() - 1) {
+                    layoutParams.setMargins(0, 1, 0, 3);
+                } else {
+                    layoutParams.setMargins(0, 1, 0, 0);
+                }
+
+                ImageView play = holder.getView(R.id.iv_qa_play);
+
+                if(questions.getId().equals(QaIngManager.getInstance().getQaNowQuestions().getId())){
+                    play.setImageResource(R.drawable.qa_stop);
+                }else{
+                    play.setImageResource(R.mipmap.qa_play);
+                }
+
+                play.setOnClickListener(new View.OnClickListener() {
+                    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(QaActivity.this, PlayQuestionActivity.class);
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(QaActivity.this, v, getString(R.string.transition_dialog));
+                        intent.putExtra("data",questionses.get(posation));
+                        startActivityForResult(intent, 1, options.toBundle());
+                    }
+                });
             }
-        });
+        };
+        questionsList.setAdapter(questionsAdapter);
     }
 
     public void onItemLongClickListener(final int postation){
@@ -172,8 +171,7 @@ public class QaActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==1 && resultCode==1){
-            Questions questions = (Questions) data.getSerializableExtra("data");
-            questionsAdapter.addDoamin(questions);
+           questionsAdapter.notifyDataSetChanged();
         }else if(requestCode==1 && resultCode==2){
             questionsAdapter.notifyDataSetChanged();
         }

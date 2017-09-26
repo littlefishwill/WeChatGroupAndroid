@@ -34,6 +34,7 @@ public class AddQuestionQaActivity extends BaseActivity {
         setContentView(R.layout.activity_addquestion_qa);
         titleShow = (TextView) findViewById(R.id.tv_qa_question_title);
         questions = (Questions) getIntent().getSerializableExtra("data");
+        questions = QaManager.getInstance().getQuestionsWithId(questions.getId());
         edit = getIntent().getIntExtra("edit", -1);
         container = (ViewGroup) findViewById(R.id.container);
         submit = (Button) findViewById(R.id.close);
