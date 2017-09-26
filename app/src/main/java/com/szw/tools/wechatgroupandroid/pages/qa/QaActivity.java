@@ -101,7 +101,7 @@ public class QaActivity extends BaseActivity {
 
                         ImageView play = holder.getView(R.id.iv_qa_play);
 
-                        if(questions.getId().equals(QaManager.getInstance().getOpenQusetions().getId())){
+                        if(questions.getId().equals(QaIngManager.getInstance().getQaNowQuestions().getId())){
                             play.setImageResource(R.drawable.qa_stop);
                         }else{
                             play.setImageResource(R.mipmap.qa_play);

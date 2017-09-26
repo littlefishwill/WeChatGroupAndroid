@@ -7,15 +7,25 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import com.szw.tools.wechatgroupandroid.R;
+import com.szw.tools.wechatgroupandroid.WeChatAdnroidGroup;
+import com.szw.tools.wechatgroupandroid.pages.qa.QaIngManager;
+import com.szw.tools.wechatgroupandroid.pages.qa.QaManager;
+import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Question;
+import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Questions;
+import com.szw.tools.wechatgroupandroid.pages.qa.listener.QaPlayListenerListener;
+import com.szw.tools.wechatgroupandroid.service.WeChatUtils;
+import com.szw.tools.wechatgroupandroid.utils.DpOrPx;
+import com.szw.tools.wechatgroupandroid.utils.TimeFormatUtils;
 
 /**
  * Created by SuZhiwei on 2017/9/22.
  */
 public class QuickTollBar  extends Toast{
     private static QuickTollBar quickTollBar;
+    private View view;
     public static QuickTollBar getInstance(Context context){
         if(quickTollBar==null) {
            quickTollBar = new QuickTollBar(context);
@@ -31,17 +41,41 @@ public class QuickTollBar  extends Toast{
     };
     private QuickTollBar(Context context) {
         super(context);
-        View view = LayoutInflater.from(context).inflate(R.layout.bar_quick_tool, null);
-        setGravity(Gravity.BOTTOM|Gravity.RIGHT,0,150);
+        view = LayoutInflater.from(context).inflate(R.layout.bar_quick_tool, null);
+        setGravity(Gravity.TOP|Gravity.RIGHT,10, DpOrPx.dip2px(WeChatAdnroidGroup.getInstance(),50));
         setDuration(LENGTH_LONG);
-        view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                cancel();
-                return false;
-            }
-        });
+        // question logic
+        QaLogic(view);
+
         setView(view);
+    }
+
+    private TextView titleQa,tips,times;
+
+    private void QaLogic(View view) {
+        titleQa = (TextView) view.findViewById(R.id.tv_qa_bar_title);
+        tips = (TextView) view.findViewById(R.id.tv_qa_bar_tips);
+        times = (TextView) view.findViewById(R.id.tv_qa_bar_time);
+        View qaContain= view.findViewById(R.id.qa_bar_contain);
+        Questions openQusetions = QaIngManager.getInstance().getQaNowQuestions();
+        if(openQusetions.getTitle()==null){
+            qaContain.setVisibility(View.GONE);
+            return;
+        }
+        qaContain.setVisibility(View.VISIBLE);
+        titleQa.setText(openQusetions.getTitle());
+        tips.setText("问答倒计时:");
+        times.setText(10+"");
+
+    }
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = WeChatAdnroidGroup.getInstance().getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = WeChatAdnroidGroup.getInstance().getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
     private boolean isCancle;
@@ -49,6 +83,7 @@ public class QuickTollBar  extends Toast{
     public void cancel() {
         super.cancel();
         isCancle = true;
+        QaIngManager.getInstance().getQaPlayer().quitePlay();
         handler.removeCallbacksAndMessages(null);
     }
 
@@ -62,6 +97,24 @@ public class QuickTollBar  extends Toast{
 
     public void showAlways(){
         isCancle = false;
+        QaLogic(view);
         show();
+        QaIngManager.getInstance().getQaPlayer().play(new QaPlayListenerListener() {
+            @Override
+            public void onReady(Questions questions, int current, long currentTime, String tip) {
+                times.setText(TimeFormatUtils.formatSeconds(currentTime/1000));
+                tips.setText(tip);
+            }
+
+            @Override
+            public void onTickChange(long tick, String tip) {
+                times.setText(TimeFormatUtils.formatSeconds(tick/1000));
+            }
+
+            @Override
+            public void onNext(Question question) {
+
+            }
+        }, WeChatUtils.getInstance().getCacheWeChatGroup());
     }
 }

@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.szw.tools.wechatgroupandroid.Manager;
 import com.szw.tools.wechatgroupandroid.R;
 import com.szw.tools.wechatgroupandroid.WeChatAdnroidGroup;
+import com.szw.tools.wechatgroupandroid.pages.qa.doamin.QaIng;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Question;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Questions;
 import com.szw.tools.wechatgroupandroid.pages.qa.listener.QuestiionLoadListener;
@@ -19,19 +20,19 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by SuZhiwei on 2017/9/23.
  */
 public class QaManager extends Manager {
     private static QaManager qaManager;
-    private static File rootFile = new File(Environment.getExternalStorageDirectory(), WeChatAdnroidGroup.getInstance().getString(R.string.qa_questions_root_folder_name));
+    public static File rootFile = new File(Environment.getExternalStorageDirectory(), WeChatAdnroidGroup.getInstance().getString(R.string.qa_questions_root_folder_name));
+    public static String qaingFile =WeChatAdnroidGroup.getInstance().getString(R.string.qa_questions_qaing_folder_name);
     private static String endDes = WeChatAdnroidGroup.getInstance().getString(R.string.qa_questions_file_enddes);
-    /**
-     * 开启问答的 题库
-     */
-    private Questions openQusetions;
+
     public static QaManager  getInstance(){
         if(qaManager==null){
             qaManager = new QaManager();
@@ -44,7 +45,10 @@ public class QaManager extends Manager {
 
     private AsyncTask loadQuestions;
     private List<Questions> cacheQuestiones;
+    private Map<String,Questions> cacheCursorMap = new HashMap<>();
+    private QaIng cacheQaing;
 
+    //----question locl
     public void loadQuesetions(final QuestiionLoadListener questiionLoadListener){
         if(loadQuestions!=null){
             loadQuestions.cancel(true);
@@ -63,11 +67,14 @@ public class QaManager extends Manager {
                     }
                 });
                 cacheQuestiones = new ArrayList<Questions>();
+                cacheCursorMap = new HashMap<>();
                 for(File file:files){
                     ObjectInputStream in;
                     try {
                         in = new ObjectInputStream(new FileInputStream(file));
-                        cacheQuestiones.add((Questions)in.readObject());
+                       Questions questions = (Questions)in.readObject();
+                       cacheQuestiones.add(questions);
+                        cacheCursorMap.put(questions.getId(),questions);
                     in.close();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -95,7 +102,6 @@ public class QaManager extends Manager {
         }
         return 1;
     }
-
     public int saveQuestions(Questions questions){
         //创建文件
         File questionFile = getQuestionFile(questions);
@@ -124,15 +130,18 @@ public class QaManager extends Manager {
 
         return 0;
     }
-
+    //----question locl - end
     public File getQuestionFile(Questions questions){
         return new File(rootFile,questions.getId()+endDes);
+    }
+    public Questions getQuestionsWithId(String id){
+        return cacheCursorMap.get(id);
     }
 
 
     @Override
     public String getSpNameSpec() {
-        return null;
+        return "qamanager";
     }
 
     @Override
@@ -140,14 +149,4 @@ public class QaManager extends Manager {
 
     }
 
-    public Questions getOpenQusetions() {
-        if(openQusetions==null){
-            openQusetions = new Questions();
-        }
-        return openQusetions;
-    }
-
-    public void setOpenQusetions(Questions openQusetions) {
-        this.openQusetions = openQusetions;
-    }
 }

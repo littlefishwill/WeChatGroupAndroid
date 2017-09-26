@@ -114,4 +114,9 @@ public class WeChatUtils {
         void  onGet(T object);
         void onExit();
     }
+
+
+    public WeChat getCacheWeChatGroup() {
+        return cacheWeChatGroup;
+    }
 }

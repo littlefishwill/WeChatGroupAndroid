@@ -44,10 +44,10 @@ public class PlayQuestionActivity extends BaseActivity {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
-                if(QaManager.getInstance().getOpenQusetions().getId().equals(questions.getId())){
-                    QaManager.getInstance().setOpenQusetions(null);
+                if(QaIngManager.getInstance().getQaNowQuestions().getId().equals(questions.getId())){
+                    QaIngManager.getInstance().setQaNowQuestions(null);
                 }else{
-                    QaManager.getInstance().setOpenQusetions(questions);
+                    QaIngManager.getInstance().setQaNowQuestions(questions);
                 }
 
                 setResult(2);
@@ -57,7 +57,7 @@ public class PlayQuestionActivity extends BaseActivity {
     }
 
     private void switchLogic() {
-        if(QaManager.getInstance().getOpenQusetions().getId().equals(questions.getId())){
+        if(QaIngManager.getInstance().getQaNowQuestions().getId().equals(questions.getId())){
             submit.setText("停止问答");
         }else{
             submit.setText("开始问答");

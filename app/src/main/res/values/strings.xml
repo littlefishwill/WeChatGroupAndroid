@@ -12,6 +12,7 @@
 
     <string name="qa_addlibrary_author">请输入作者（例如：张三）</string>
     <string name="qa_questions_root_folder_name">WXJL</string>
+    <string name="qa_questions_qaing_folder_name">QAING</string>
     <string name="qa_questions_file_enddes">.wxjlqa</string>
 
     <string name="qa_addquestion_title_qa">输入题目（例如：老虎是食肉动物吗？）</string>
