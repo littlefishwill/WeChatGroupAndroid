@@ -50,12 +50,14 @@ public class QuickTollBar  extends Toast{
         setView(view);
     }
 
-    private TextView titleQa,tips,times;
+    private TextView titleQa,tips,times,qades;
 
     private void QaLogic(View view) {
         titleQa = (TextView) view.findViewById(R.id.tv_qa_bar_title);
         tips = (TextView) view.findViewById(R.id.tv_qa_bar_tips);
         times = (TextView) view.findViewById(R.id.tv_qa_bar_time);
+        qades = (TextView) view.findViewById(R.id.tv_qa_bar_qa_des);
+
         View qaContain= view.findViewById(R.id.qa_bar_contain);
         Questions openQusetions = QaIngManager.getInstance().getQaNowQuestions();
         if(openQusetions.getTitle()==null){
@@ -63,7 +65,7 @@ public class QuickTollBar  extends Toast{
             return;
         }
         qaContain.setVisibility(View.VISIBLE);
-        titleQa.setText(openQusetions.getTitle());
+        titleQa.setText(openQusetions.getTitle()+"("+openQusetions.getQuestions().size()+")");
         tips.setText("问答倒计时:");
         times.setText(10+"");
 
@@ -102,8 +104,13 @@ public class QuickTollBar  extends Toast{
         QaIngManager.getInstance().getQaPlayer().play(new QaPlayListenerListener() {
             @Override
             public void onReady(Questions questions, int current, long currentTime, String tip) {
+                qades.setText("等待开始");
                 times.setText(TimeFormatUtils.formatSeconds(currentTime/1000));
                 tips.setText(tip);
+//                if(times.getText().equals("9秒")) {
+//                    String des = "10秒后将开始答题，试卷为（"+questions.getTitle()+"）";
+//                    WeChatUtils.getInstance().sendText(des,true);
+//                }
             }
 
             @Override
@@ -112,8 +119,16 @@ public class QuickTollBar  extends Toast{
             }
 
             @Override
-            public void onNext(Question question) {
+            public void onNext(Question question,int pos) {
+                qades.setText(pos+1+"."+question.getDes());
+                tips.setText("剩余");
+                WeChatUtils.getInstance().sendText(question.getDes(),true);
+            }
 
+            @Override
+            public void onFinshPlay() {
+                times.setText("已经完成");
+                tips.setText("");
             }
         }, WeChatUtils.getInstance().getCacheWeChatGroup());
     }

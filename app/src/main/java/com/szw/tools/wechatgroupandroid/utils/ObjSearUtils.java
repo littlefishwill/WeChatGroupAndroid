@@ -11,7 +11,7 @@ import java.io.ObjectOutputStream;
  * Created by shenmegui on 2017/9/26.
  */
 public class ObjSearUtils {
-    public static int saveObj(File file){
+    public static int saveObj(File file,Object object){
         if(!file.getParentFile().exists()){
             file.getParentFile().mkdirs();
         }
@@ -28,7 +28,7 @@ public class ObjSearUtils {
         ObjectOutputStream out = null;
         try {
             out = new ObjectOutputStream(new FileOutputStream(file.getAbsolutePath()));
-            out.writeObject(file);
+            out.writeObject(object);
             out.close();
         } catch (IOException e) {
             e.printStackTrace();

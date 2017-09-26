@@ -1,6 +1,8 @@
 package com.szw.tools.wechatgroupandroid.pages.qa;
 
 import android.os.AsyncTask;
+import android.util.Log;
+
 import com.szw.tools.wechatgroupandroid.Manager;
 import com.szw.tools.wechatgroupandroid.WeChatAdnroidGroup;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.QaIng;
@@ -84,6 +86,7 @@ public class QaIngManager  extends Manager {
             protected Void doInBackground(Void... params) {
                 try {
                     qaIng = ObjSearUtils.readObj(getCacheQaIngFile(),QaIng.class);
+                    Log.e("??","--"+qaIng.getQaings().size());
                 } catch (Exception e) {
                     e.printStackTrace();
                     qaIng = null;
@@ -106,9 +109,9 @@ public class QaIngManager  extends Manager {
     public int delectQaIng(){
        return ObjSearUtils.delObj(getCacheQaIngFile());
     }
-    public int saveQaing(Questions questions){
+    public int saveQaing(QaIng qaIng){
         //创建文件
-        return ObjSearUtils.saveObj(getCacheQaIngFile());
+        return ObjSearUtils.saveObj(getCacheQaIngFile(),qaIng);
     }
     private File getCacheQaIngFile(){
         return new File(new File(QaManager.rootFile,QaManager.qaingFile),"qaing.cache");

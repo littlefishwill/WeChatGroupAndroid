@@ -199,7 +199,7 @@ public class MainActivity extends BaseActivity {
             }
         });
         va.setInterpolator(new DecelerateInterpolator());
-        va.setDuration(500);
+        va.setDuration(400);
         //开始动画
         va.start();
     }

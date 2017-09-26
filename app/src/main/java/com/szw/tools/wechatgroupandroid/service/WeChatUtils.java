@@ -2,10 +2,14 @@ package com.szw.tools.wechatgroupandroid.service;
 
 import android.accessibilityservice.AccessibilityService;
 import android.annotation.TargetApi;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Build;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import com.szw.tools.wechatgroupandroid.WeChatAdnroidGroup;
 import com.szw.tools.wechatgroupandroid.service.domain.GroupChat;
 import com.szw.tools.wechatgroupandroid.service.domain.WeChat;
 
@@ -101,8 +105,35 @@ public class WeChatUtils {
          }
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void onGetMessage(AccessibilityEvent event,WeChatBaseListener<GroupChat> weChatBaseListener){
 
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    public void sendText(String text,boolean isSend){
+        if(cacheWeChatGroup!=null){
+            AccessibilityNodeInfo rootInActiveWindow = getRootInActiveWindow();
+            List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a6g");
+            AccessibilityNodeInfo accessibilityNodeInfo = accessibilityNodeInfosByViewId.get(0);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                ClipboardManager clipboard = (ClipboardManager) WeChatAdnroidGroup.getInstance().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("des", text);
+                clipboard.setPrimaryClip(clip);
+                accessibilityNodeInfo.performAction(AccessibilityNodeInfo.ACTION_FOCUS);
+                accessibilityNodeInfo.performAction(AccessibilityNodeInfo.ACTION_PASTE);
+            }
+
+            List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId1 = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a6m");
+
+            AccessibilityNodeInfo accessibilityNodeInfo1 = accessibilityNodeInfosByViewId1.get(0);
+            if(accessibilityNodeInfo1.isClickable()){
+                accessibilityNodeInfo1.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            }
+
+
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
