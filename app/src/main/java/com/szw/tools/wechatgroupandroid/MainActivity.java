@@ -38,7 +38,7 @@ public class MainActivity extends BaseActivity {
     public static int Request_Dialog_Res_Cancle =3;
     public static int Request_Dialog_Res_Success =4;
     private RippleView helpSwitch;
-    private ScaleTextView switchDes;
+    private ScaleTextView switchDes,helloText;
     private BaseFragment actionListFragment;
     private FloatingActionButton serviceSwitch;
     private static BaseActivity cacheActivity;
@@ -55,6 +55,7 @@ public class MainActivity extends BaseActivity {
 
         helpSwitch = (RippleView) findViewById(R.id.ripp_view_main_switchopen);
         switchDes = (ScaleTextView) findViewById(R.id.sctv_main_switch_des);
+        helloText = (ScaleTextView) findViewById(R.id.sctv_main_hello);
         serviceSwitch = (FloatingActionButton) findViewById(R.id.fab);
         appBarLayout = (AppBarLayout) findViewById(R.id.abl_switch_contain);
         switLayoutLogic();
@@ -119,14 +120,18 @@ public class MainActivity extends BaseActivity {
     }
     private void checkServiceStatue() {
         switchDes.animateText("");
+        helloText.animateText("");
         if(PhoneActivityService.isAccessibilitySettingsOn(MainActivity.this)){
             User user = UserManager.getInstance().getUser();
             if(user.isOpen()){
+//                helloText.setVisibility(View.INVISIBLE);
+                helloText.animateText("");
                 changeLayout(true);
             }else{
                 helpSwitch.setVisibility(View.INVISIBLE);
                 helpSwitch.stopRippleAnimation();
                 switchDes.animateText("已关闭,点击小红钮可开启~");
+                helloText.animateText(getWelcomString());
                 changeLayout(false);
             }
         }else{
@@ -135,8 +140,18 @@ public class MainActivity extends BaseActivity {
             User user = UserManager.getInstance().getUser();
             user.setOpen(false);
             UserManager.getInstance().updateUser(user);
+            helloText.animateText(getWelcomString());
             switchDes.animateText("请点击小红钮，手动开启服务.");
             changeLayout(false);
+        }
+    }
+
+    private String getWelcomString(){
+        User user = UserManager.getInstance().getUser();
+        if(user.getUserName()==null || user.getUserName().length()<1){
+            return "Welcome";
+        }else{
+            return "Welcome,"+user.getUserName();
         }
     }
 
@@ -184,7 +199,8 @@ public class MainActivity extends BaseActivity {
                     helpSwitch.startRippleAnimation();
                     switchDes.animateText("已开启，正常运行中~");
                 } else {
-
+//                    helloText.setVisibility(View.VISIBLE);
+                    helloText.animateText(getWelcomString());
                 }
             }
 
