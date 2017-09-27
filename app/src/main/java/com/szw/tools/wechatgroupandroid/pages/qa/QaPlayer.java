@@ -1,14 +1,14 @@
 package com.szw.tools.wechatgroupandroid.pages.qa;
 
 import android.os.CountDownTimer;
-import android.util.Log;
-
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.QaIng;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.QaIng_Question;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Question;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Questions;
 import com.szw.tools.wechatgroupandroid.pages.qa.listener.QaIngLoadListener;
 import com.szw.tools.wechatgroupandroid.pages.qa.listener.QaPlayListenerListener;
+import com.szw.tools.wechatgroupandroid.service.WeChatUtils;
+import com.szw.tools.wechatgroupandroid.service.domain.Chat;
 import com.szw.tools.wechatgroupandroid.service.domain.WeChat;
 
 /**
@@ -30,7 +30,7 @@ public class QaPlayer {
             public void onLoad(QaIng qaIng) {
                 QaPlayer.this.qaIng = qaIng;
                 qaNowQuestions = QaIngManager.getInstance().getQaNowQuestions();
-                QaIng_Question qaIng_question = qaIng.getQaings().get(weChat.getName());
+                final QaIng_Question qaIng_question = qaIng.getQaings().get(weChat.getName());
                 currentPlayPos = 0;
                 progressTime = 0;
                 String tips = "开始倒计时:";
@@ -55,11 +55,14 @@ public class QaPlayer {
                     progressTime = 0;
                 }
 
-
                 countDownTimer = new CountDownTimer(10000,1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
-                        qaPlayListenerListener.onReady(qaNowQuestions, currentPlayPos, millisUntilFinished, "即将开始");
+                        if(qaIng_question!=null&&(currentPlayPos>0|| progressTime>0)){
+                            qaPlayListenerListener.onReady(qaNowQuestions, currentPlayPos, millisUntilFinished, "即将继续答题:"+(currentPlayPos+1)+".");
+                        }else {
+                            qaPlayListenerListener.onReady(qaNowQuestions, currentPlayPos, millisUntilFinished, "即将开始");
+                        }
                     }
 
                     @Override
@@ -69,8 +72,6 @@ public class QaPlayer {
                     }
                 };
                 countDownTimer.start();
-
-
             }
 
             @Override
@@ -83,8 +84,11 @@ public class QaPlayer {
     public void quitePlay(){
         if(countDownTimer!=null) {
             countDownTimer.cancel();
-            saveProgress();
+            countDownTimer = null;
+            savePlayProgress(keepTime);
         }
+
+        question = null;
 
     }
 
@@ -93,9 +97,13 @@ public class QaPlayer {
     private Question question;
     private long keepTime;
     private void playGoOn(Question question, long aleryPlay){
+        if(countDownTimer!=null){
+            countDownTimer.cancel();
+        }
+
         this.question = question;
         keepTime = question.getTime();
-        savePlayProgress();
+        savePlayProgress(question.getTime());
 
          qaPlayListenerListener.onNext(question,currentPlayPos);
          qaIng_question = new QaIng_Question();
@@ -112,32 +120,50 @@ public class QaPlayer {
 
             @Override
             public void onFinish() {
-                currentPlayPos = currentPlayPos+1;
-                if(qaNowQuestions.getQuestions().size()>currentPlayPos){
-                    Question questionNext = qaNowQuestions.getQuestions().get(currentPlayPos);
-                    qaPlayListenerListener.onTickChange(0,"");
-                    playGoOn(questionNext,0);
-                }else{
-                    qaPlayListenerListener.onFinshPlay();
-                }
+                playNext();
             }
         };
         countDownTimer.start();
     }
 
-    private void savePlayProgress() {
+    private void playNext() {
+        currentPlayPos = currentPlayPos+1;
+        if(qaNowQuestions.getQuestions().size()>currentPlayPos){
+            Question questionNext = qaNowQuestions.getQuestions().get(currentPlayPos);
+            qaPlayListenerListener.onTickChange(0,"");
+            playGoOn(questionNext,0);
+        }else{
+            qaPlayListenerListener.onFinshPlay();
+        }
+    }
+
+    private void savePlayProgress(long playtime) {
         qaIng_question = new QaIng_Question();
         qaIng_question.setCurrent(currentPlayPos);
-        qaIng_question.setUseTime(0);
+        qaIng_question.setUseTime(playtime);
         qaIng.getQaings().put(weChat.getName(),qaIng_question);
         QaIngManager.getInstance().saveQaing(qaIng);
     }
 
-    public  void saveProgress(){
-        qaIng_question = new QaIng_Question();
-        qaIng_question.setCurrent(currentPlayPos);
-        qaIng_question.setUseTime(keepTime);
-        qaIng.getQaings().put(weChat.getName(), qaIng_question);
-        QaIngManager.getInstance().saveQaing(qaIng);
+    public void onReceive(Chat chat){
+        if(question!=null){
+            for(String answer:question.getType2Answer()){
+                if(chat.getMessage().trim().toLowerCase().equals(answer.toLowerCase())){
+                    onAnswerRight(chat,question);
+                    return;
+                }
+            }
+            onAnswerFail(chat,question);
+        }
     }
+
+    private void onAnswerRight(Chat chat,Question question){
+        WeChatUtils.getInstance().sendText(chat.getName()+"回答正确,得"+question.getSource()+"分;进入下一题。",true);
+        playNext();
+    }
+
+    private void onAnswerFail(Chat chat,Question question){
+
+    }
+
 }

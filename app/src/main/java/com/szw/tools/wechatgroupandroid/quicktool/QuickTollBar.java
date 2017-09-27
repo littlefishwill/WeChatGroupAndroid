@@ -19,6 +19,7 @@ import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Question;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Questions;
 import com.szw.tools.wechatgroupandroid.pages.qa.listener.QaPlayListenerListener;
 import com.szw.tools.wechatgroupandroid.service.WeChatUtils;
+import com.szw.tools.wechatgroupandroid.service.domain.Chat;
 import com.szw.tools.wechatgroupandroid.utils.DpOrPx;
 import com.szw.tools.wechatgroupandroid.utils.TimeFormatUtils;
 
@@ -127,7 +128,7 @@ public class QuickTollBar  extends Toast{
         QaIngManager.getInstance().getQaPlayer().play(new QaPlayListenerListener() {
             @Override
             public void onReady(Questions questions, int current, long currentTime, String tip) {
-                qades.setText("等待开始");
+                qades.setText(tip);
                 times.setText(TimeFormatUtils.formatSecondsUseCode(currentTime / 1000));
                 tips.setText(tip);
             }
@@ -153,4 +154,6 @@ public class QuickTollBar  extends Toast{
         }, WeChatUtils.getInstance().getCacheWeChatGroup());
         show();
     }
+
+
 }

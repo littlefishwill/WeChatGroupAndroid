@@ -14,8 +14,10 @@ import android.widget.Toast;
 
 import com.szw.tools.wechatgroupandroid.MainActivity;
 import com.szw.tools.wechatgroupandroid.WeChatAdnroidGroup;
+import com.szw.tools.wechatgroupandroid.pages.qa.QaIngManager;
 import com.szw.tools.wechatgroupandroid.quicktool.QuickTollActivity;
 import com.szw.tools.wechatgroupandroid.quicktool.QuickTollBar;
+import com.szw.tools.wechatgroupandroid.service.domain.Chat;
 import com.szw.tools.wechatgroupandroid.service.domain.WeChat;
 import com.szw.tools.wechatgroupandroid.user.UserManager;
 
@@ -40,6 +42,11 @@ public class PhoneActivityService extends AccessibilityService {
             return;
         }
 
+//        AccessibilityNodeInfo ani = getRootInActiveWindow();
+//        if (ani != null) {
+//            ani.refresh(); // to fix issue with viewIdResName = null on Android 6+
+//        }
+
         /**
          * 监听进入微信主界面
          */
@@ -59,11 +66,6 @@ public class PhoneActivityService extends AccessibilityService {
         WeChatUtils.getInstance().onEnterTell(event,new WeChatUtils.WeChatBaseListener<WeChat>(){
             @Override
             public void onGet(WeChat object) {
-//                Toast.makeText(WeChatAdnroidGroup.getInstance(),object.getName(),Toast.LENGTH_LONG).show();
-//                MainActivity.finishS();
-//                Intent qucickToll = new Intent(PhoneActivityService.this, QuickTollActivity.class);
-//                qucickToll.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(qucickToll);
                 QuickTollBar.getInstance(WeChatAdnroidGroup.getInstance()).showAlways();
             }
 
@@ -73,6 +75,21 @@ public class PhoneActivityService extends AccessibilityService {
                 QuickTollBar.getInstance(WeChatAdnroidGroup.getInstance()).cancel();
             }
         });
+
+        // --- 监听 发来聊天记录
+        WeChatUtils.getInstance().onGetMessage(event, new WeChatUtils.WeChatBaseListener<Chat>() {
+            @Override
+            public void onGet(Chat object) {
+                QaIngManager.getInstance().getQaPlayer().onReceive(object);
+//                Toast.makeText(WeChatAdnroidGroup.getInstance(),object.getMessage(),Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onExit() {
+
+            }
+        });
+
     }
 
     @Override
@@ -94,7 +111,7 @@ public class PhoneActivityService extends AccessibilityService {
             // 微信首页 第一个元素为资第一 view.，聊天界面第一个节点为linnerlayout
             if(rootNode!=null && className.equals("android.widget.ListView") && rootNode.getChildCount()>0 && rootNode.getChild(0).getClassName().toString().equals("android.widget.LinearLayout")) {
 //                //查询聊天对象名称
-                getWeChatTellRecode(rootNode);
+//                getWeChatTellRecode(rootNode);
 //                //聊天记录 回传
 //                getChatRecord(rootNode);
             }else{
@@ -163,48 +180,7 @@ public class PhoneActivityService extends AccessibilityService {
         return accessibilityFound;
     }
 
-    /**
-     * 遍历所有控件，找到头像Imagview，里面有对联系人的描述
-     */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-    private void getWeChatTellRecode(AccessibilityNodeInfo node) {
 
-        List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId1 = node.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/gz");
-        if(accessibilityNodeInfosByViewId1.size()>0){
-            AccessibilityNodeInfo accessibilityNodeInfo = accessibilityNodeInfosByViewId1.get(0);
-             cacheTellName = accessibilityNodeInfo.getText().toString().trim();
-        }
-
-        List<AccessibilityNodeInfo> bqc = node.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a5j");
-        if(bqc.size()>0){
-            AccessibilityNodeInfo accessibilityNodeInfo = bqc.get(0);
-            AccessibilityNodeInfo child = accessibilityNodeInfo.getChild(accessibilityNodeInfo.getChildCount() - 1);
-            List<AccessibilityNodeInfo> imageicoS = child.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/io");
-            if(imageicoS.size()>0){
-                AccessibilityNodeInfo imageico = imageicoS.get(0);
-                CharSequence contentDescription = imageico.getContentDescription();
-                ChatName = contentDescription.toString().replace("头像", "");
-
-                //----根据名称查询，首页文字变化
-                List<AccessibilityNodeInfo> homeUserItemName = getRootInActiveWindow().findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ajc");
-                List<AccessibilityNodeInfo> homeUserItemText = getRootInActiveWindow().findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aje");
-                for(int i=0;i<homeUserItemName.size();i++){
-                    if(homeUserItemName.get(i).getText().toString().trim().equals(cacheTellName)){
-//                        Toast.makeText(ControlApplication.context,homeUserItemName.get(i).getText()+"="+i+ homeUserItemName.get(i).getParent().getParent().getParent().getParent().getClassName().toString(),Toast.LENGTH_LONG).show();
-                        String text = homeUserItemText.get(i).getText().toString();
-                        if(ChatRecord.equals(text)){
-                            return;
-                        }
-                        ChatRecord = text;
-                        sendText(ChatName+":"+ChatRecord);
-
-                    }
-                }
-            }
-        }
-
-        // --- find last recode
-    }
 
     public void sendText(String text){
 //        Iterator<Map.Entry<String, Long>> iterator = controlList.entrySet().iterator();

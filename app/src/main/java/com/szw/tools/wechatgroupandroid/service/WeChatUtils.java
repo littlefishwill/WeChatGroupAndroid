@@ -8,8 +8,10 @@ import android.content.Context;
 import android.os.Build;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.Toast;
 
 import com.szw.tools.wechatgroupandroid.WeChatAdnroidGroup;
+import com.szw.tools.wechatgroupandroid.service.domain.Chat;
 import com.szw.tools.wechatgroupandroid.service.domain.GroupChat;
 import com.szw.tools.wechatgroupandroid.service.domain.WeChat;
 
@@ -24,6 +26,7 @@ public class WeChatUtils {
     private WeChat cacheWeChatGroup;
     private AccessibilityService accessibilityService;
     private WeChatBaseListener<WeChat> weChatBaseListener;
+    private Chat cacheChat;
     public static WeChatUtils getInstance(){
         if(weChatUtils==null){
             weChatUtils = new WeChatUtils();
@@ -106,7 +109,18 @@ public class WeChatUtils {
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-    public void onGetMessage(AccessibilityEvent event,WeChatBaseListener<GroupChat> weChatBaseListener){
+    public void onGetMessage(AccessibilityEvent event,WeChatBaseListener<Chat> weChatBaseListener){
+        if(cacheWeChatGroup!=null){
+            // enter wechat tell
+            switch (event.getEventType()){
+                case AccessibilityEvent.TYPE_VIEW_SCROLLED:
+                    Chat weChatTellRecode = getWeChatTellRecode(getRootInActiveWindow());
+                    if(weChatTellRecode!=null){
+                        weChatBaseListener.onGet(weChatTellRecode);
+                    }
+                    break;
+            }
+        }
 
     }
 
@@ -125,16 +139,29 @@ public class WeChatUtils {
                 accessibilityNodeInfo.performAction(AccessibilityNodeInfo.ACTION_PASTE);
             }
 
-            List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId1 = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a6m");
-
-            AccessibilityNodeInfo accessibilityNodeInfo1 = accessibilityNodeInfosByViewId1.get(0);
-            if(accessibilityNodeInfo1.isClickable()){
-                accessibilityNodeInfo1.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            if(isSend) {
+                List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId1 = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a6m");
+                if(accessibilityNodeInfosByViewId1.size()>0) {
+                    AccessibilityNodeInfo accessibilityNodeInfo1 = accessibilityNodeInfosByViewId1.get(0);
+                    if (accessibilityNodeInfo1.isClickable()) {
+                        accessibilityNodeInfo1.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    }
+                }
             }
 
 
         }
     }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    public void openKeyBord(boolean openKeBord){
+        AccessibilityNodeInfo rootInActiveWindow = getRootInActiveWindow();
+        List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a6g");
+        AccessibilityNodeInfo accessibilityNodeInfo = accessibilityNodeInfosByViewId.get(0);
+        accessibilityNodeInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+
+    }
+
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public AccessibilityNodeInfo getRootInActiveWindow(){
@@ -144,6 +171,50 @@ public class WeChatUtils {
     public interface   WeChatBaseListener<T>{
         void  onGet(T object);
         void onExit();
+    }
+
+    /**
+     * 遍历所有控件，找到头像Imagview，里面有对联系人的描述
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    private Chat getWeChatTellRecode(AccessibilityNodeInfo node) {
+        if(cacheChat==null){
+            cacheChat = new Chat();
+        }
+        List<AccessibilityNodeInfo> bqc = node.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a5j");
+        if(bqc.size()>0){
+            AccessibilityNodeInfo accessibilityNodeInfo = bqc.get(0);
+            AccessibilityNodeInfo child = accessibilityNodeInfo.getChild(accessibilityNodeInfo.getChildCount() - 1);
+            List<AccessibilityNodeInfo> imageicoS = child.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/io");
+            if(imageicoS.size()>0){
+                AccessibilityNodeInfo imageico = imageicoS.get(0);
+                CharSequence contentDescription = imageico.getContentDescription();
+                cacheChat.setName(contentDescription.toString().replace("头像", ""));
+
+                //----根据名称查询，首页文字变化
+                List<AccessibilityNodeInfo> homeUserItemName = getRootInActiveWindow().findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ajc");
+                List<AccessibilityNodeInfo> homeUserItemText = getRootInActiveWindow().findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aje");
+                for(int i=0;i<homeUserItemName.size();i++){
+                    if(homeUserItemName.get(i).getText().toString().trim().equals(cacheWeChatGroup.getName())){
+                        String text = homeUserItemText.get(i).getText().toString();
+                        if(cacheChat!=null && cacheChat.getMessage()!=null && cacheChat.getMessage().equals(text)){
+                            // --- 过滤重复信息
+                            openKeyBord(true);
+                            return null;
+                        }
+//                        Toast.makeText(WeChatAdnroidGroup.getInstance(),homeUserItemName.get(i).getText()+"="+i+ text,Toast.LENGTH_LONG).show();
+
+                        cacheChat.setMessage(text);
+                        getRootInActiveWindow().recycle();
+                        getRootInActiveWindow().refresh();
+                        return cacheChat;
+
+                    }
+                }
+            }
+        }
+        return null;
+        // --- find last recode
     }
 
 
