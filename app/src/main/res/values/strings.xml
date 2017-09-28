@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">微信精灵</string>
     <string name="action_settings">Settings</string>
-    <string name="action_qa_title">问答功能</string>
+    <string name="action_qa_title">问答</string>
     <string name="action_qa_answer_title">问答结果</string>
     <string name="access_service_switch_name">微信精灵</string>
+    <string name="action_qa_result">问答结果</string>
+    <string name="action_qa_result_des">问答详细</string>
     <string name="access_service_des">您需要激活此服务，才可以正常使用本软件</string>
 
     <string name="transition_dialog">transition_dialog</string>
@@ -13,7 +15,9 @@
     <string name="qa_addlibrary_author">请输入作者（例如：张三）</string>
     <string name="qa_questions_root_folder_name">WXJL</string>
     <string name="qa_questions_qaing_folder_name">QAING</string>
+    <string name="qa_questions_qaresult_folder_name">QaResult</string>
     <string name="qa_questions_file_enddes">.wxjlqa</string>
+    <string name="qa_questions_file_result_enddes">.wxjlqaresult</string>
 
     <string name="qa_addquestion_title_qa">输入题目（例如：老虎是食肉动物吗？）</string>
 

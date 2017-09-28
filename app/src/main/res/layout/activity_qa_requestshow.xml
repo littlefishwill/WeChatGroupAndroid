@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="#EBEBEB" android:clipChildren="false"
+    tools:context=".pages.qa.QuestionsShowAvtivity">
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent" android:titleTextColor="@android:color/white"
+            android:layout_height="70dip"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" android:clipChildren="false" android:gravity="center_vertical">
+
+</RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" android:layout_marginTop="65dp">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_qa_questions"
+        android:layout_width="match_parent" android:paddingTop="20dip"
+        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+        <View android:layout_marginTop="-15dp"
+        android:id="@+id/v_fix_fab_hiddle_click" android:visibility="gone"
+        android:layout_width="60dip" android:layout_alignParentRight="true" android:layout_marginRight="17dp"
+        android:layout_height="40dip" ></View>
+
+    </RelativeLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

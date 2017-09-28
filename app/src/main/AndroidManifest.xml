@@ -60,6 +60,11 @@
 
         <activity android:name=".pages.qa.QaActivity" android:label="@string/action_qa_title"></activity>
 
+        <activity android:name=".pages.qa.QaResultListActivity" android:label="@string/action_qa_result"></activity>
+
+        <activity android:name=".pages.qa.QuestionsResultShowAvtivity"
+            android:theme="@style/AppTheme.NoActionBar" android:label="@string/action_qa_result_des"></activity>
+
         <activity android:name=".pages.qa.QuestionsShowAvtivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 

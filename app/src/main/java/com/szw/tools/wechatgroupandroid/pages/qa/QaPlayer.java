@@ -3,6 +3,7 @@ package com.szw.tools.wechatgroupandroid.pages.qa;
 import android.os.CountDownTimer;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.QaIng;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.QaIng_Question;
+import com.szw.tools.wechatgroupandroid.pages.qa.doamin.QaResult;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Question;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Questions;
 import com.szw.tools.wechatgroupandroid.pages.qa.listener.QaIngLoadListener;
@@ -10,6 +11,9 @@ import com.szw.tools.wechatgroupandroid.pages.qa.listener.QaPlayListenerListener
 import com.szw.tools.wechatgroupandroid.service.WeChatUtils;
 import com.szw.tools.wechatgroupandroid.service.domain.Chat;
 import com.szw.tools.wechatgroupandroid.service.domain.WeChat;
+import com.szw.tools.wechatgroupandroid.utils.ObjSearUtils;
+
+import java.util.UUID;
 
 /**
  * Created by shenmegui on 2017/9/26.
@@ -67,7 +71,11 @@ public class QaPlayer {
 
                     @Override
                     public void onFinish() {
+                        //--- 记录 存储开始节点
+                        QaPlayResultManager.getInstance().onStar(qaNowQuestions);
+                        //--- 开始
                         playGoOn(qaNowQuestions.getQuestions().get(currentPlayPos==-1?0:currentPlayPos),progressTime);
+
 
                     }
                 };
@@ -87,7 +95,7 @@ public class QaPlayer {
             countDownTimer = null;
             savePlayProgress(keepTime);
         }
-
+        QaPlayResultManager.getInstance().onStop();
         question = null;
 
     }
@@ -106,6 +114,8 @@ public class QaPlayer {
         savePlayProgress(question.getTime());
 
          qaPlayListenerListener.onNext(question,currentPlayPos);
+        // 开始记录该题目的答题情况
+         QaPlayResultManager.getInstance().onPlayIng(question);
          qaIng_question = new QaIng_Question();
          qaIng_question.setCurrent(currentPlayPos);
 
@@ -127,12 +137,15 @@ public class QaPlayer {
     }
 
     private void playNext() {
+        // -------current question play end
+        QaPlayResultManager.getInstance().onPlayEnd();
         currentPlayPos = currentPlayPos+1;
         if(qaNowQuestions.getQuestions().size()>currentPlayPos){
             Question questionNext = qaNowQuestions.getQuestions().get(currentPlayPos);
             qaPlayListenerListener.onTickChange(0,"");
             playGoOn(questionNext,0);
         }else{
+            QaPlayResultManager.getInstance().onStop();
             qaPlayListenerListener.onFinshPlay();
         }
     }
@@ -158,12 +171,23 @@ public class QaPlayer {
     }
 
     private void onAnswerRight(Chat chat,Question question){
-        WeChatUtils.getInstance().sendText(chat.getName()+"回答正确,得"+question.getSource()+"分;进入下一题。",true);
+        // 存储正确答案集合
+        QaPlayResultManager.getInstance().onAnswer(chat,true);
+        String tips;
+        if(currentPlayPos>=qaNowQuestions.getQuestions().size()-1){
+            tips = "当前为最后一道题目";
+        }else{
+            tips = "进入下一题";
+        }
+        WeChatUtils.getInstance().sendText(chat.getName()+"回答正确,得"+question.getSource()+tips,true);
         playNext();
     }
 
     private void onAnswerFail(Chat chat,Question question){
+        QaPlayResultManager.getInstance().onAnswer(chat,false);
 
     }
+
+
 
 }

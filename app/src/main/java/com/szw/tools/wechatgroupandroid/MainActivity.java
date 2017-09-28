@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.szw.tools.wechatgroupandroid.pages.actionlist.ActionListFragment;
 import com.szw.tools.wechatgroupandroid.pages.qa.QaManager;
+import com.szw.tools.wechatgroupandroid.pages.qa.QaPlayResultManager;
 import com.szw.tools.wechatgroupandroid.service.PhoneActivityService;
 import com.szw.tools.wechatgroupandroid.service.StartService;
 import com.szw.tools.wechatgroupandroid.user.User;
@@ -85,6 +86,7 @@ public class MainActivity extends BaseActivity {
      */
     private void loadAllData() {
         QaManager.getInstance().loadQuesetions(null);
+        QaPlayResultManager.getInstance().loadQaResult(null);
     }
 
     /**

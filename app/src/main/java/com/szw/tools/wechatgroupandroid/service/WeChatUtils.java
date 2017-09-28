@@ -129,6 +129,11 @@ public class WeChatUtils {
         if(cacheWeChatGroup!=null){
             AccessibilityNodeInfo rootInActiveWindow = getRootInActiveWindow();
             List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a6g");
+
+            if(accessibilityNodeInfosByViewId==null || accessibilityNodeInfosByViewId.size()<1){
+                return;
+            }
+
             AccessibilityNodeInfo accessibilityNodeInfo = accessibilityNodeInfosByViewId.get(0);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -157,8 +162,10 @@ public class WeChatUtils {
     public void openKeyBord(boolean openKeBord){
         AccessibilityNodeInfo rootInActiveWindow = getRootInActiveWindow();
         List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a6g");
-        AccessibilityNodeInfo accessibilityNodeInfo = accessibilityNodeInfosByViewId.get(0);
-        accessibilityNodeInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        if(accessibilityNodeInfosByViewId!=null && accessibilityNodeInfosByViewId.size()>0) {
+            AccessibilityNodeInfo accessibilityNodeInfo = accessibilityNodeInfosByViewId.get(0);
+            accessibilityNodeInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        }
 
     }
 
@@ -199,15 +206,20 @@ public class WeChatUtils {
                         String text = homeUserItemText.get(i).getText().toString();
                         if(cacheChat!=null && cacheChat.getMessage()!=null && cacheChat.getMessage().equals(text)){
                             // --- 过滤重复信息
-                            openKeyBord(true);
+//                            openKeyBord(true);
                             return null;
                         }
 //                        Toast.makeText(WeChatAdnroidGroup.getInstance(),homeUserItemName.get(i).getText()+"="+i+ text,Toast.LENGTH_LONG).show();
 
                         cacheChat.setMessage(text);
-                        getRootInActiveWindow().recycle();
-                        getRootInActiveWindow().refresh();
-                        return cacheChat;
+//                        getRootInActiveWindow().
+//                        getRootInActiveWindow().refresh();
+
+                        sendText("",false);
+                        Chat chat = new Chat();
+                        chat.setMessage(cacheChat.getMessage());
+                        chat.setName(cacheChat.getName());
+                        return chat;
 
                     }
                 }

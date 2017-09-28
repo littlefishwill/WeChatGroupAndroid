@@ -12,6 +12,7 @@
         app:cardBackgroundColor="#FFFFFF"
         app:cardElevation="1dp" android:layout_marginTop="20dp">
         <RelativeLayout
+            android:id="@+id/rv_qa_result_item"
             android:layout_width="match_parent"
             android:layout_height="60dp" android:clickable="true"
             android:padding="3dp"  android:background="?android:attr/selectableItemBackground">

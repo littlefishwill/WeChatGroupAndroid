@@ -53,6 +53,7 @@ public class QaIngManager  extends Manager {
     }
 
     public Questions getQaNowQuestions(){
+
         if(cacheQuestionsId.length()<1){
             cacheQuestionsId =  Sputils.getInstance(WeChatAdnroidGroup.getInstance()).getField(this,"qaing","");
         }
@@ -60,7 +61,8 @@ public class QaIngManager  extends Manager {
         if(cacheQuestionsId.length()<1){
             return new Questions();
         }else {
-            return QaManager.getInstance().getQuestionsWithId(cacheQuestionsId);
+            Questions questionsWithId = QaManager.getInstance().getQuestionsWithId(cacheQuestionsId);
+            return questionsWithId==null?new Questions():questionsWithId;
         }
     }
 
@@ -114,7 +116,7 @@ public class QaIngManager  extends Manager {
         return ObjSearUtils.saveObj(getCacheQaIngFile(),qaIng);
     }
     private File getCacheQaIngFile(){
-        return new File(new File(QaManager.rootFile,QaManager.qaingFile),"qaing.cache");
+        return new File(new File(QaManager.rootFile,QaManager.qaResultFiles),"qaing.cache");
     }
 
 

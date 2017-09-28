@@ -51,8 +51,19 @@ public class QaActivity extends BaseActivity {
         questionsList = (RecyclerView) findViewById(R.id.rv_qa_questions);
         addQuestionLogic();
         showQuestionLibrary();
+        qaResultLogic();
 
 //        emptyQA.animateText("题库为空！点击右下角小红点可以添加题库.");
+
+    }
+
+    private void qaResultLogic() {
+        findViewById(R.id.rv_qa_result_item).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(QaActivity.this,QaResultListActivity.class));
+            }
+        });
 
     }
 
@@ -107,7 +118,7 @@ public class QaActivity extends BaseActivity {
 
                 ImageView play = holder.getView(R.id.iv_qa_play);
 
-                if(questions.getId().equals(QaIngManager.getInstance().getQaNowQuestions().getId())){
+                if(QaIngManager.getInstance().getQaNowQuestions()!=null && questions.getId().equals(QaIngManager.getInstance().getQaNowQuestions().getId())){
                     play.setImageResource(R.drawable.qa_stop);
                 }else{
                     play.setImageResource(R.mipmap.qa_play);

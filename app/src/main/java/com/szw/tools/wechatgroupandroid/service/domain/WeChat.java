@@ -1,12 +1,13 @@
 package com.szw.tools.wechatgroupandroid.service.domain;
 
+import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Created by SuZhiwei on 2017/9/22.
  */
-public class WeChat {
+public class WeChat  implements Serializable{
     private String name;
     private boolean isGroup;
     private int number;

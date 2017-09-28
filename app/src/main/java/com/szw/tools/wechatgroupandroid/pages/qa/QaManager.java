@@ -31,7 +31,9 @@ public class QaManager extends Manager {
     private static QaManager qaManager;
     public static File rootFile = new File(Environment.getExternalStorageDirectory(), WeChatAdnroidGroup.getInstance().getString(R.string.qa_questions_root_folder_name));
     public static String qaingFile =WeChatAdnroidGroup.getInstance().getString(R.string.qa_questions_qaing_folder_name);
-    private static String endDes = WeChatAdnroidGroup.getInstance().getString(R.string.qa_questions_file_enddes);
+    public static String qaResultFiles =WeChatAdnroidGroup.getInstance().getString(R.string.qa_questions_qaresult_folder_name);
+    public static String endDes = WeChatAdnroidGroup.getInstance().getString(R.string.qa_questions_file_enddes);
+    public static String endDesResult = WeChatAdnroidGroup.getInstance().getString(R.string.qa_questions_file_result_enddes);
 
     public static QaManager  getInstance(){
         if(qaManager==null){
@@ -68,6 +70,11 @@ public class QaManager extends Manager {
                 });
                 cacheQuestiones = new ArrayList<Questions>();
                 cacheCursorMap = new HashMap<>();
+
+                if(files==null){
+                    return null;
+                }
+
                 for(File file:files){
                     ObjectInputStream in;
                     try {
