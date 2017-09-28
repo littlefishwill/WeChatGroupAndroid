@@ -12,6 +12,7 @@ import com.szw.tools.wechatgroupandroid.service.WeChatUtils;
 import com.szw.tools.wechatgroupandroid.service.domain.Chat;
 import com.szw.tools.wechatgroupandroid.service.domain.WeChat;
 import com.szw.tools.wechatgroupandroid.utils.ObjSearUtils;
+import com.szw.tools.wechatgroupandroid.utils.TimeFormatUtils;
 
 import java.util.UUID;
 
@@ -146,6 +147,7 @@ public class QaPlayer {
             playGoOn(questionNext,0);
         }else{
             QaPlayResultManager.getInstance().onStop();
+            countDownTimer.cancel();
             qaPlayListenerListener.onFinshPlay();
         }
     }
@@ -172,20 +174,20 @@ public class QaPlayer {
 
     private void onAnswerRight(Chat chat,Question question){
         // 存储正确答案集合
-        QaPlayResultManager.getInstance().onAnswer(chat,true);
+        QaPlayResultManager.getInstance().onAnswer(chat, true);
         String tips;
         if(currentPlayPos>=qaNowQuestions.getQuestions().size()-1){
             tips = "当前为最后一道题目";
         }else{
             tips = "进入下一题";
         }
-        WeChatUtils.getInstance().sendText(chat.getName()+"回答正确,得"+question.getSource()+tips,true);
+        WeChatUtils.getInstance().sendText(chat.getName()+"回答正确！\r\n得"+question.getSource()+"分。"+tips,true);
         playNext();
     }
 
     private void onAnswerFail(Chat chat,Question question){
         QaPlayResultManager.getInstance().onAnswer(chat,false);
-
+        WeChatUtils.getInstance().sendText("@"+chat.getName() + "回答错误.\r\n该问题剩余回答时间为:"+ TimeFormatUtils.formatSecondsUseCode(keepTime/1000), true);
     }
 
 

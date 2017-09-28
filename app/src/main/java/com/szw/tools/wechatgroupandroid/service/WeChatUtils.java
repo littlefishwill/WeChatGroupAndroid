@@ -6,6 +6,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
@@ -124,8 +125,10 @@ public class WeChatUtils {
 
     }
 
+    private String cacheSendText = "";
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void sendText(String text,boolean isSend){
+
         if(cacheWeChatGroup!=null){
             AccessibilityNodeInfo rootInActiveWindow = getRootInActiveWindow();
             List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a6g");
@@ -137,6 +140,9 @@ public class WeChatUtils {
             AccessibilityNodeInfo accessibilityNodeInfo = accessibilityNodeInfosByViewId.get(0);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                if(text.trim().length()>0) {
+                    cacheSendText = text;
+                }
                 ClipboardManager clipboard = (ClipboardManager) WeChatAdnroidGroup.getInstance().getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("des", text);
                 clipboard.setPrimaryClip(clip);
@@ -209,6 +215,22 @@ public class WeChatUtils {
 //                            openKeyBord(true);
                             return null;
                         }
+
+                        // --过滤发送提示语
+                        if(cacheSendText.equals(text)){
+                            return null;
+                        }
+
+
+                        if(text.contains("回答正确") || text.contains("回答错误")){
+                                return  null;
+                        }
+
+//                        if()
+
+                        // ------ 过滤本机发送 end
+
+
 //                        Toast.makeText(WeChatAdnroidGroup.getInstance(),homeUserItemName.get(i).getText()+"="+i+ text,Toast.LENGTH_LONG).show();
 
                         cacheChat.setMessage(text);

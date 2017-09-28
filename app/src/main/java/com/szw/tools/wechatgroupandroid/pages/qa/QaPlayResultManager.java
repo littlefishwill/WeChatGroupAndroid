@@ -54,7 +54,7 @@ public class QaPlayResultManager {
         qaResult.setQaLibraryId(questions.getId());
         qaResult.setQaLibraryAuthorName(questions.getAuthor());
         qaResult.setQaResultItems(new ArrayList<QaResultItem>());
-        Log.e("QaPlayResultManager","onStart");
+        Log.e("QaPlayResultManager", "onStart");
 
 
 }
@@ -74,7 +74,18 @@ public class QaPlayResultManager {
     }
 
     public void onAnswer(Chat chat, boolean isRight){
+        if(qaResult == null || qaResult.getQaResultItems()==null){
+            return;
+        }
+
+
+
         QaResultItem qaResultItem = qaResult.getQaResultItems().get(qaResult.getQaResultItems().size() - 1);
+
+        if(chat.getMessage().contains(qaResultItem.getQuestion().getDes()) &&chat.getMessage().endsWith(")")){
+            return;
+        }
+
         Log.e("QaPlayResultManager","onAnswer:"+chat.getName()+":"+chat.getMessage()+"?"+isRight+":"+qaResultItem.getErrorWechats().size());
         if(isRight){
             qaResult.getQaResultItems().get(qaResult.getQaResultItems().size()-1).getRightWechats().add(chat);
