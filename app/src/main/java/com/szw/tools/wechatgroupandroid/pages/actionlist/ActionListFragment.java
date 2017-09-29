@@ -12,6 +12,7 @@ import com.szw.tools.wechatgroupandroid.BaseFragment;
 import com.szw.tools.wechatgroupandroid.R;
 import com.szw.tools.wechatgroupandroid.pages.actionlist.domain.Action;
 import com.szw.tools.wechatgroupandroid.pages.qa.QaActivity;
+import com.szw.tools.wechatgroupandroid.pages.score.GroupScoreListActivity;
 import com.szw.tools.wechatgroupandroid.view.adapter.CommonAdapter;
 import com.szw.tools.wechatgroupandroid.view.adapter.CommonViewHolder;
 
@@ -46,6 +47,9 @@ public class ActionListFragment  extends BaseFragment{
                         switch (action.getActionId()){
                             case ActionManager.Action_Id_QA:
                                 startActivity(new Intent(getActivity(), QaActivity.class));
+                                break;
+                            case ActionManager.Action_Id_JF:
+                                startActivity(new Intent(getActivity(), GroupScoreListActivity.class));
                                 break;
                         }
                     }

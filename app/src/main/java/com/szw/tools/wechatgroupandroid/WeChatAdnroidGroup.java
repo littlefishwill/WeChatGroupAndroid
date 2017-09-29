@@ -2,6 +2,8 @@ package com.szw.tools.wechatgroupandroid;
 
 import android.app.Application;
 
+import com.szw.tools.wechatgroupandroid.db.DbManager;
+
 /**
  * Created by shenmegui on 2017/9/21.
  */

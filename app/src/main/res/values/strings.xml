@@ -5,6 +5,7 @@
     <string name="action_qa_answer_title">问答结果</string>
     <string name="access_service_switch_name">微信精灵</string>
     <string name="action_qa_result">问答结果</string>
+    <string name="action_score_group">积分</string>
     <string name="action_qa_result_des">问答详细</string>
     <string name="access_service_des">您需要激活此服务，才可以正常使用本软件</string>
 

@@ -1,20 +1,13 @@
 package com.szw.tools.wechatgroupandroid.pages.qa;
 
-import android.annotation.TargetApi;
-import android.app.ActivityOptions;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.szw.tools.wechatgroupandroid.BaseActivity;
@@ -22,12 +15,9 @@ import com.szw.tools.wechatgroupandroid.R;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.QaResult;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.QaResultItem;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Question;
-import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Questions;
 import com.szw.tools.wechatgroupandroid.service.domain.Chat;
-import com.szw.tools.wechatgroupandroid.utils.TimeFormatUtils;
 import com.szw.tools.wechatgroupandroid.view.adapter.CommonAdapter;
 import com.szw.tools.wechatgroupandroid.view.adapter.CommonViewHolder;
-
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -71,6 +61,8 @@ public class QuestionsResultShowAvtivity extends BaseActivity {
             @Override
             public void convert(CommonViewHolder holder, QaResultItem qaResultItem, final int posation) {
                 TextView title = holder.getView(R.id.tv_question_title);
+                View circleNumber = holder.getView(R.id.tv_question_number);
+                View viewLine = holder.getView(R.id.v_line);
                 final TextView pos = holder.getView(R.id.tv_question_number);
                 TextView time = holder.getView(R.id.question_time);
                 TextView source = holder.getView(R.id.question_source);
@@ -85,10 +77,26 @@ public class QuestionsResultShowAvtivity extends BaseActivity {
                 source.setText(question.getSource()+"积分");
                 answer.setText("正确答案:"+getString(question.getType2Answer()));
 
-                rightAnswer.setText(getAnswer(qaResultItem.getRightWechats()));
-                errorAnswer.setText(getAnswer(qaResultItem.getErrorWechats()));
+                // -------------- result code chuli
 
+                if(qaResultItem.getRightWechats().size()<1){
+                    rightAnswer.setVisibility(View.GONE);
+                    circleNumber.setBackgroundResource(R.drawable.circle_red);
+                    viewLine.setBackgroundResource(R.color.colorAccent);
+                }else{
+                    rightAnswer.setVisibility(View.VISIBLE);
+                    rightAnswer.setText("回答正确者:\r\n"+getAnswer(qaResultItem.getRightWechats()));
+                    circleNumber.setBackgroundResource(R.drawable.circle_greent);
+                    viewLine.setBackgroundResource(R.color.colorPrimary);
+                }
 
+                if(qaResultItem.getErrorWechats().size()<1){
+                    errorAnswer.setVisibility(View.GONE);
+                }else{
+                    errorAnswer.setText("回答错误者:\r\n"+getAnswer(qaResultItem.getErrorWechats()));
+
+                    errorAnswer.setVisibility(View.VISIBLE);
+                }
             }
         };
         questionsRv.setAdapter(questionAdapter);

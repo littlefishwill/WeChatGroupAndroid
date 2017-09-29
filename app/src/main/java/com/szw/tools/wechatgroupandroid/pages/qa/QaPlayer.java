@@ -1,9 +1,11 @@
 package com.szw.tools.wechatgroupandroid.pages.qa;
 
 import android.os.CountDownTimer;
+
+import com.szw.tools.wechatgroupandroid.db.ChatScoreDao;
+import com.szw.tools.wechatgroupandroid.db.DbManager;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.QaIng;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.QaIng_Question;
-import com.szw.tools.wechatgroupandroid.pages.qa.doamin.QaResult;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Question;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Questions;
 import com.szw.tools.wechatgroupandroid.pages.qa.listener.QaIngLoadListener;
@@ -11,10 +13,7 @@ import com.szw.tools.wechatgroupandroid.pages.qa.listener.QaPlayListenerListener
 import com.szw.tools.wechatgroupandroid.service.WeChatUtils;
 import com.szw.tools.wechatgroupandroid.service.domain.Chat;
 import com.szw.tools.wechatgroupandroid.service.domain.WeChat;
-import com.szw.tools.wechatgroupandroid.utils.ObjSearUtils;
 import com.szw.tools.wechatgroupandroid.utils.TimeFormatUtils;
-
-import java.util.UUID;
 
 /**
  * Created by shenmegui on 2017/9/26.
@@ -181,8 +180,21 @@ public class QaPlayer {
         }else{
             tips = "进入下一题";
         }
+
+        ChatScoreDao chatScoreDao = DbManager.getInstance().getLiteOrm().queryById(chat.getName(), ChatScoreDao.class);
+        if(chatScoreDao==null){
+            chatScoreDao = new ChatScoreDao();
+        }
+        chatScoreDao.setChatName(chat.getName());
+        chatScoreDao.setGroupName(WeChatUtils.getInstance().getCacheWeChatGroup().getName());
+        chatScoreDao.setScore(chatScoreDao.getScore()+question.getSource());
+        chatScoreDao.setQaResultId(QaPlayResultManager.getInstance().getQaResult().getId());
+        DbManager.getInstance().getLiteOrm().save(chatScoreDao);
+
         WeChatUtils.getInstance().sendText(chat.getName()+"回答正确！\r\n得"+question.getSource()+"分。"+tips,true);
+
         playNext();
+
     }
 
     private void onAnswerFail(Chat chat,Question question){

@@ -1,5 +1,7 @@
 package com.szw.tools.wechatgroupandroid.pages.qa;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,7 +36,7 @@ public class QaResultListActivity extends BaseActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(new CommonAdapter<QaResult>(QaResultListActivity.this,R.layout.item_playresult,QaPlayResultManager.getInstance().getQaResults()) {
             @Override
-            public void convert(CommonViewHolder holder, final QaResult qaResult, int posation) {
+            public void convert(CommonViewHolder holder, final QaResult qaResult, final int posation) {
                 TextView name =  holder.getView(R.id.tv_qa_item_title);
                 TextView time =  holder.getView(R.id.tv_qa_item_time);
                 TextView time_dur =  holder.getView(R.id.tv_qa_item_author);
@@ -48,6 +50,38 @@ public class QaResultListActivity extends BaseActivity {
                         Intent intent = new Intent(QaResultListActivity.this, QuestionsResultShowAvtivity.class);
                         intent.putExtra("data",qaResult);
                         startActivity(intent);
+                    }
+                });
+
+                holder.getView(R.id.item_question_contain).setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        final AlertDialog.Builder normalDialog =
+                                new AlertDialog.Builder(QaResultListActivity.this);
+                        normalDialog.setTitle("删除");
+                        normalDialog.setMessage("您确定要删除'"+qaResult.getQaLibraryName()+"'在 "+timeformat.format(qaResult.getStartTime())+"的这场问答结果吗？" );
+                        normalDialog.setPositiveButton("确定",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //...To-do
+                                        QaPlayResultManager.getInstance().getQaResults().remove(posation);
+                                        QaPlayResultManager.getInstance().delectQaResult(qaResult);
+                                        recyclerView.getAdapter().notifyDataSetChanged();
+                                    }
+                                });
+
+                        normalDialog.setNegativeButton("取消",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //...To-do
+                                    }
+                                });
+                        // 显示
+                        normalDialog.show();
+
+                        return false;
                     }
                 });
 

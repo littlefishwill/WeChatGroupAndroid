@@ -112,7 +112,7 @@ public class QuestionsShowAvtivity extends BaseActivity {
                                         questionAdapter.notifyDataSetChanged();
                                         totleLogic();
                                         //...To-do
-//                                        QaManager.getInstance().delectQuestions((Questions) questionsAdapter.getmDatas().get(postation));
+//                                        QaManager.getInstance().delectQaResult((Questions) questionsAdapter.getmDatas().get(postation));
 //                                        questionsAdapter.getmDatas().remove(postation);
 //                                        questionsAdapter.notifyDataSetChanged();
                                     }

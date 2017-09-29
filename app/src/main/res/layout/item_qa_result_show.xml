@@ -13,10 +13,11 @@
             android:layout_height="match_parent" android:orientation="vertical">
             <TextView
                 android:id="@+id/tv_question_number"
-                android:textStyle="bold"
+                android:textStyle="bold" android:textColor="@android:color/white"
                 android:layout_width="40dip" android:text="1" android:textSize="18sp" android:gravity="center"
                 android:layout_height="40dip" android:background="@drawable/circle_greent" />
             <View
+                android:id="@+id/v_line"
                 android:layout_width="2dp"
                 android:layout_height="match_parent" android:background="@color/colorPrimary"></View>
         </LinearLayout>

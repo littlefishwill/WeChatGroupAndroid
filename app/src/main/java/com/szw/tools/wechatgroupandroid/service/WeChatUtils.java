@@ -122,7 +122,6 @@ public class WeChatUtils {
                     break;
             }
         }
-
     }
 
     private String cacheSendText = "";

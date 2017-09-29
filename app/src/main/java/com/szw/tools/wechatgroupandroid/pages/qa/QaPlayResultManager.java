@@ -177,10 +177,24 @@ public class QaPlayResultManager {
         return 0;
     }
 
+    public int delectQaResult(QaResult qaResult){
+        qaResultMap.remove(qaResult.getId());
+        File questionFile = getCacheQaIngFile(qaResult);
+        if(questionFile.exists()){
+            questionFile.delete();
+            return 0;
+        }
+        return 1;
+    }
+
     public List<QaResult> getQaResults() {
         if(qaResults==null){
             qaResults = new ArrayList<>();
         }
         return qaResults;
+    }
+
+    public QaResult getQaResult() {
+        return qaResult;
     }
 }

@@ -27,9 +27,9 @@ public class ActionManager {
      */
     public static final int Action_Id_QA =0x01;
     /**
-     * 签到 id
+     * 积分 id
      */
-    public static final int Action_Id_QD =0x02;
+    public static final int Action_Id_JF =0x02;
 
     /**
      * 娱乐 id
@@ -39,11 +39,11 @@ public class ActionManager {
     public List<Action> getActions(){
         ArrayList<Action> actions = new ArrayList<>();
         actions.add(new Action("问答", Action_Id_QA,R.mipmap.action_qa,true));
-        actions.add(new Action("签到", Action_Id_QD,R.mipmap.action_qd,true));
-        actions.add(new Action("抽签", Action_Id_QA,R.mipmap.action_qa,true));
-        actions.add(new Action("娱乐", Action_Id_HP,R.mipmap.action_happy,true));
-        actions.add(new Action("天气", Action_Id_QA,R.mipmap.action_wheather,true));
-        actions.add(new Action("答卷", Action_Id_QA,R.mipmap.action_qa,true));
+        actions.add(new Action("积分", Action_Id_JF,R.mipmap.socre_ico,true));
+//        actions.add(new Action("抽签", Action_Id_QA,R.mipmap.action_qa,true));
+//        actions.add(new Action("娱乐", Action_Id_HP,R.mipmap.action_happy,true));
+//        actions.add(new Action("天气", Action_Id_QA,R.mipmap.action_wheather,true));
+//        actions.add(new Action("答卷", Action_Id_QA,R.mipmap.action_qa,true));
         return actions;
     }
 
