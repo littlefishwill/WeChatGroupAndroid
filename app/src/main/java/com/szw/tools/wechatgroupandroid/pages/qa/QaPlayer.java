@@ -181,14 +181,13 @@ public class QaPlayer {
             tips = "进入下一题";
         }
 
-        ChatScoreDao chatScoreDao = DbManager.getInstance().getLiteOrm().queryById(chat.getName(), ChatScoreDao.class);
-        if(chatScoreDao==null){
-            chatScoreDao = new ChatScoreDao();
-        }
+
+        ChatScoreDao  chatScoreDao = new ChatScoreDao();
         chatScoreDao.setChatName(chat.getName());
         chatScoreDao.setGroupName(WeChatUtils.getInstance().getCacheWeChatGroup().getName());
-        chatScoreDao.setScore(chatScoreDao.getScore()+question.getSource());
+        chatScoreDao.setScore(chatScoreDao.getScore() + question.getSource());
         chatScoreDao.setQaResultId(QaPlayResultManager.getInstance().getQaResult().getId());
+        chatScoreDao.setSocreTime(System.currentTimeMillis());
         DbManager.getInstance().getLiteOrm().save(chatScoreDao);
 
         WeChatUtils.getInstance().sendText(chat.getName()+"回答正确！\r\n得"+question.getSource()+"分。"+tips,true);

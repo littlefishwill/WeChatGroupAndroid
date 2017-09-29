@@ -11,7 +11,10 @@ import com.litesuits.orm.db.enums.AssignType;
 @Table("chatdao")
 public class ChatScoreDao {
     // 指定自增，每个对象需要有一个主键
-    @PrimaryKey(AssignType.BY_MYSELF)
+    @PrimaryKey(AssignType.AUTO_INCREMENT)
+    private int id;
+    // 非空字段
+    @NotNull
     private String chatName;
 
     // 非空字段
@@ -26,6 +29,16 @@ public class ChatScoreDao {
     @NotNull
     private String qaResultId;
 
+    @NotNull
+    private long socreTime;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getGroupName() {
         return groupName;
@@ -57,5 +70,13 @@ public class ChatScoreDao {
 
     public void setQaResultId(String qaResultId) {
         this.qaResultId = qaResultId;
+    }
+
+    public long getSocreTime() {
+        return socreTime;
+    }
+
+    public void setSocreTime(long socreTime) {
+        this.socreTime = socreTime;
     }
 }

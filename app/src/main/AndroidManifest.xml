@@ -64,6 +64,8 @@
 
         <activity android:name=".pages.score.GroupScoreListActivity" android:label="@string/action_score_group"></activity>
 
+        <activity android:name=".pages.score.ChatScoreListActivity" android:label="@string/action_score_group"></activity>
+
         <activity android:name=".pages.qa.QuestionsResultShowAvtivity"
             android:theme="@style/AppTheme.NoActionBar" android:label="@string/action_qa_result_des"></activity>
 

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_questions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="#FFFFFF"
+        app:cardElevation="1dp" android:layout_marginTop="1dp">
+        <RelativeLayout
+            android:id="@+id/item_question_contain"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:padding="3dp"
+            android:background="?android:attr/selectableItemBackground" >
+
+            <TextView
+                android:id="@+id/tv_qa_item_title"
+                android:layout_width="wrap_content"
+                android:text="" android:layout_marginRight="100dip" android:singleLine="true"
+                android:layout_height="wrap_content" android:layout_marginLeft="30dp"
+                android:textSize="17sp"  android:textColor="#4D4D4D"  android:layout_marginTop="7dip" />
+
+            <TextView
+                android:id="@+id/tv_qa_item_time"
+                android:layout_width="wrap_content"
+                android:text=""
+                android:layout_height="wrap_content" android:layout_marginLeft="30dp"
+                android:textSize="12sp"  android:textColor="#4D4D4D"  android:layout_marginTop="35dip" />
+
+            <TextView
+                android:id="@+id/tv_qa_item_author"
+                android:layout_width="wrap_content"
+                android:text=""
+                android:layout_height="wrap_content" android:layout_marginLeft="150dp"
+                android:textSize="12sp"  android:textColor="#4D4D4D"  android:layout_marginTop="35dip" />
+
+            <!--<ImageView android:layout_alignParentRight="true" android:layout_centerVertical="true"-->
+                <!--android:layout_width="30dip" android:layout_marginRight="70dp"-->
+                <!--android:layout_height="30dip" android:src="@mipmap/qa_library_edit" />-->
+
+
+            <!--<ImageView-->
+                <!--android:id="@+id/iv_qa_play"-->
+                <!--android:layout_alignParentRight="true" android:layout_centerVertical="true"-->
+                <!--android:layout_width="30dip" android:layout_marginRight="20dp"-->
+                <!--android:layout_height="30dip" android:src="@mipmap/qa_play" />-->
+
+
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="25dp"
+                android:layout_height="25dp" android:layout_marginRight="20dp"
+                android:src="@drawable/right_jt" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+
+</RelativeLayout>
