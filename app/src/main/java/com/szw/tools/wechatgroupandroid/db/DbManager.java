@@ -48,14 +48,18 @@ public class DbManager extends Manager {
 
     public List<ChatScoreDao> getGroupSocre(){
         List<ChatScoreDao> chatScoreDaos = new ArrayList<>();
-        Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select groupName,sum(score) as  score from chatdao  group by groupName order by socreTime desc", null);
-        while (cursor.moveToNext()){
-            String name = cursor.getString(cursor.getColumnIndex("groupName"));
-            int socre = cursor.getInt(cursor.getColumnIndex("score"));
-            ChatScoreDao chatScoreDao = new ChatScoreDao();
-            chatScoreDao.setGroupName(name);
-            chatScoreDao.setScore(socre);
-            chatScoreDaos.add(chatScoreDao);
+        try {
+            Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select groupName,sum(score) as  score from chatdao  group by groupName order by socreTime desc", null);
+            while (cursor.moveToNext()) {
+                String name = cursor.getString(cursor.getColumnIndex("groupName"));
+                int socre = cursor.getInt(cursor.getColumnIndex("score"));
+                ChatScoreDao chatScoreDao = new ChatScoreDao();
+                chatScoreDao.setGroupName(name);
+                chatScoreDao.setScore(socre);
+                chatScoreDaos.add(chatScoreDao);
+            }
+        }catch (Exception ex){
+            return new ArrayList<ChatScoreDao>();
         }
 
         return chatScoreDaos;

@@ -4,14 +4,8 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.transition.ArcMotion;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.Interpolator;
-
 import com.szw.tools.wechatgroupandroid.BaseActivity;
 import com.szw.tools.wechatgroupandroid.MainActivity;
 import com.szw.tools.wechatgroupandroid.R;
@@ -23,6 +17,7 @@ public class DialogActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_dialog);
 
         container = (ViewGroup) findViewById(R.id.container);
@@ -38,6 +33,7 @@ public class DialogActivity extends BaseActivity {
                 dismiss();
             }
         };
+
         container.setOnClickListener(dismissListener);
         container.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)

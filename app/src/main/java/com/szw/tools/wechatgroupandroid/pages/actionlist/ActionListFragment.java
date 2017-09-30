@@ -59,5 +59,4 @@ public class ActionListFragment  extends BaseFragment{
 
     }
 
-
 }
