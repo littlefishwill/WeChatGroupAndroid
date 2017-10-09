@@ -22,6 +22,15 @@ import java.util.List;
  * Created by SuZhiwei on 2017/9/22.
  */
 public class WeChatUtils {
+
+    private static String WECHAT_ID_CHAT_TITLE_TEXT = "com.tencent.mm:id/h2"; //聊天界面-title
+    private static String WECHAT_ID_CHAT_ENTER_TEXT = "com.tencent.mm:id/a71";//聊天界面-输入框
+    private static String WECHAT_ID_CHAT_SEND ="com.tencent.mm:id/a77";//聊天界面-发送按钮
+    private static String WECHAT_ID_CHAT_LIST="com.tencent.mm:id/a64"; //聊天界面-对话列表
+    private static String WECHAT_ID_CHAT_LIST_ITEM_ICO="com.tencent.mm:id/iw"; //聊天界面-会话条目-Image
+    private static String WECHAT_ID_CHATLIST_LIST_ITEM_NAME_TEXT="com.tencent.mm:id/ak1"; //聊天列表界面-会话条目-Image
+    private static String WECHAT_ID_CHATLIST_LIST_ITEM_CONTENT_TEXT="com.tencent.mm:id/ak3"; //聊天列表界面-会话条目-Image
+
     private static WeChatUtils weChatUtils;
     private boolean isEnterWechat = false;
     private WeChat cacheWeChatGroup;
@@ -44,9 +53,6 @@ public class WeChatUtils {
         if(event.getEventType()==AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED){
             if(event.getClassName().toString().equals("com.tencent.mm.ui.LauncherUI")) {
                 isEnterWechat = true;
-//                if(weChatBaseListener!=null){
-//                    weChatBaseListener.onGet(new Object());
-//                }
             }else{
                 if(weChatBaseListener!=null){
                     weChatBaseListener.onExit();
@@ -93,7 +99,7 @@ public class WeChatUtils {
     private void checkIsInChatPage(WeChatBaseListener<WeChat> weChatBaseListener) {
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
         // 微信首页 第一个元素为资第一 view.，聊天界面第一个节点为linnerlayout
-        List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId1 = rootNode.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/gz");
+        List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId1 = rootNode.findAccessibilityNodeInfosByViewId(WECHAT_ID_CHAT_TITLE_TEXT);
         if (accessibilityNodeInfosByViewId1.size() > 0) {
             AccessibilityNodeInfo accessibilityNodeInfo = accessibilityNodeInfosByViewId1.get(0);
             if(cacheWeChatGroup==null) {
@@ -130,7 +136,7 @@ public class WeChatUtils {
 
         if(cacheWeChatGroup!=null){
             AccessibilityNodeInfo rootInActiveWindow = getRootInActiveWindow();
-            List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a6g");
+            List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId = rootInActiveWindow.findAccessibilityNodeInfosByViewId(WECHAT_ID_CHAT_ENTER_TEXT);
 
             if(accessibilityNodeInfosByViewId==null || accessibilityNodeInfosByViewId.size()<1){
                 return;
@@ -150,7 +156,7 @@ public class WeChatUtils {
             }
 
             if(isSend) {
-                List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId1 = rootInActiveWindow.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a6m");
+                List<AccessibilityNodeInfo> accessibilityNodeInfosByViewId1 = rootInActiveWindow.findAccessibilityNodeInfosByViewId(WECHAT_ID_CHAT_SEND);
                 if(accessibilityNodeInfosByViewId1.size()>0) {
                     AccessibilityNodeInfo accessibilityNodeInfo1 = accessibilityNodeInfosByViewId1.get(0);
                     if (accessibilityNodeInfo1.isClickable()) {
@@ -193,19 +199,20 @@ public class WeChatUtils {
         if(cacheChat==null){
             cacheChat = new Chat();
         }
-        List<AccessibilityNodeInfo> bqc = node.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/a5j");
+
+        List<AccessibilityNodeInfo> bqc = node.findAccessibilityNodeInfosByViewId(WECHAT_ID_CHAT_LIST);
         if(bqc.size()>0){
             AccessibilityNodeInfo accessibilityNodeInfo = bqc.get(0);
             AccessibilityNodeInfo child = accessibilityNodeInfo.getChild(accessibilityNodeInfo.getChildCount() - 1);
-            List<AccessibilityNodeInfo> imageicoS = child.findAccessibilityNodeInfosByViewId("com.tencent.mm:id/io");
+            List<AccessibilityNodeInfo> imageicoS = child.findAccessibilityNodeInfosByViewId(WECHAT_ID_CHAT_LIST_ITEM_ICO);
             if(imageicoS.size()>0){
                 AccessibilityNodeInfo imageico = imageicoS.get(0);
                 CharSequence contentDescription = imageico.getContentDescription();
                 cacheChat.setName(contentDescription.toString().replace("头像", ""));
 
                 //----根据名称查询，首页文字变化
-                List<AccessibilityNodeInfo> homeUserItemName = getRootInActiveWindow().findAccessibilityNodeInfosByViewId("com.tencent.mm:id/ajc");
-                List<AccessibilityNodeInfo> homeUserItemText = getRootInActiveWindow().findAccessibilityNodeInfosByViewId("com.tencent.mm:id/aje");
+                List<AccessibilityNodeInfo> homeUserItemName = getRootInActiveWindow().findAccessibilityNodeInfosByViewId(WECHAT_ID_CHATLIST_LIST_ITEM_NAME_TEXT);
+                List<AccessibilityNodeInfo> homeUserItemText = getRootInActiveWindow().findAccessibilityNodeInfosByViewId(WECHAT_ID_CHATLIST_LIST_ITEM_CONTENT_TEXT);
                 for(int i=0;i<homeUserItemName.size();i++){
                     if(homeUserItemName.get(i).getText().toString().trim().equals(cacheWeChatGroup.getName())){
                         String text = homeUserItemText.get(i).getText().toString();
@@ -220,21 +227,11 @@ public class WeChatUtils {
                             return null;
                         }
 
-
                         if(text.contains("回答正确") || text.contains("回答错误")){
                                 return  null;
                         }
 
-//                        if()
-
-                        // ------ 过滤本机发送 end
-
-
-//                        Toast.makeText(WeChatAdnroidGroup.getInstance(),homeUserItemName.get(i).getText()+"="+i+ text,Toast.LENGTH_LONG).show();
-
                         cacheChat.setMessage(text);
-//                        getRootInActiveWindow().
-//                        getRootInActiveWindow().refresh();
 
                         sendText("",false);
                         Chat chat = new Chat();
@@ -246,6 +243,7 @@ public class WeChatUtils {
                 }
             }
         }
+
         return null;
         // --- find last recode
     }
