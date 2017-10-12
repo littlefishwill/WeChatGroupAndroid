@@ -15,6 +15,8 @@ import com.szw.tools.wechatgroupandroid.service.domain.Chat;
 import com.szw.tools.wechatgroupandroid.service.domain.WeChat;
 import com.szw.tools.wechatgroupandroid.utils.TimeFormatUtils;
 
+import java.util.List;
+
 /**
  * Created by shenmegui on 2017/9/26.
  */
@@ -145,10 +147,28 @@ public class QaPlayer {
             qaPlayListenerListener.onTickChange(0,"");
             playGoOn(questionNext,0);
         }else{
+            sendQAResult();
             QaPlayResultManager.getInstance().onStop();
             countDownTimer.cancel();
             qaPlayListenerListener.onFinshPlay();
         }
+    }
+
+    /**
+     * 发送公布，考试结果
+     */
+    private void sendQAResult() {
+        //---
+        List<ChatScoreDao> groupInSCore = DbManager.getInstance().getGroupInSCore(WeChatUtils.getInstance().getCacheWeChatGroup().getName(), QaPlayResultManager.getInstance().getQaResult().getId());
+        StringBuilder socreBuilder = new StringBuilder();
+        socreBuilder.append("本次问答结束，得分统计如下:\r\n");
+        int i = 1;
+        for(ChatScoreDao chatScoreDao:groupInSCore){
+            socreBuilder.append("第"+i+"名:"+chatScoreDao.getChatName()+" 总分:"+chatScoreDao.getScore()+"\r\n");
+        }
+        String trim = socreBuilder.toString().trim();
+        WeChatUtils.getInstance().sendText(trim,true);
+
     }
 
     private void savePlayProgress(long playtime) {
@@ -185,12 +205,12 @@ public class QaPlayer {
         ChatScoreDao  chatScoreDao = new ChatScoreDao();
         chatScoreDao.setChatName(chat.getName());
         chatScoreDao.setGroupName(WeChatUtils.getInstance().getCacheWeChatGroup().getName());
-        chatScoreDao.setScore(chatScoreDao.getScore() + question.getSource());
+        chatScoreDao.setScore(question.getSource());
         chatScoreDao.setQaResultId(QaPlayResultManager.getInstance().getQaResult().getId());
         chatScoreDao.setSocreTime(System.currentTimeMillis());
         DbManager.getInstance().getLiteOrm().save(chatScoreDao);
 
-        WeChatUtils.getInstance().sendText(chat.getName()+"回答正确！\r\n得"+question.getSource()+"分。"+tips,true);
+        WeChatUtils.getInstance().sendText(chat.getName()+"回答正确！\r\n得"+question.getSource()+"分。\r\n"+tips,true);
 
         playNext();
 

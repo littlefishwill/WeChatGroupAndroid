@@ -49,7 +49,7 @@ public class DbManager extends Manager {
     public List<ChatScoreDao> getGroupSocre(){
         List<ChatScoreDao> chatScoreDaos = new ArrayList<>();
         try {
-            Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select groupName,sum(score) as  score from chatdao  group by groupName order by socreTime desc", null);
+            Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select groupName,sum(score) as  score from chatScoreDao  group by groupName order by socreTime desc", null);
             while (cursor.moveToNext()) {
                 String name = cursor.getString(cursor.getColumnIndex("groupName"));
                 int socre = cursor.getInt(cursor.getColumnIndex("score"));
@@ -68,7 +68,27 @@ public class DbManager extends Manager {
 
     public List<ChatScoreDao> getGroupInSCore(String groupName){
         List<ChatScoreDao> chatScoreDaos = new ArrayList<>();
-        Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select chatName,sum(score) as  score from chatdao  where groupName = '"+groupName+"'  group by chatName order by socreTime desc", null);
+        Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select chatName,sum(score) as  score from chatScoreDao  where groupName = '"+groupName+"'  group by chatName order by socreTime desc", null);
+        while (cursor.moveToNext()){
+            String name = cursor.getString(cursor.getColumnIndex("chatName"));
+            int socre = cursor.getInt(cursor.getColumnIndex("score"));
+            ChatScoreDao chatScoreDao = new ChatScoreDao();
+            chatScoreDao.setChatName(name);
+            chatScoreDao.setScore(socre);
+            chatScoreDaos.add(chatScoreDao);
+        }
+        return  chatScoreDaos;
+    }
+
+    /**
+     * 查询组，具体某场考试的分数。
+     * @param groupName
+     * @param qaId
+     * @return
+     */
+    public List<ChatScoreDao> getGroupInSCore(String groupName,String qaId){
+        List<ChatScoreDao> chatScoreDaos = new ArrayList<>();
+        Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select chatName,sum(score) as  score from chatScoreDao  where groupName = '"+groupName+"' and qaResultId = '"+qaId+"' group by chatName order by socreTime desc", null);
         while (cursor.moveToNext()){
             String name = cursor.getString(cursor.getColumnIndex("chatName"));
             int socre = cursor.getInt(cursor.getColumnIndex("score"));

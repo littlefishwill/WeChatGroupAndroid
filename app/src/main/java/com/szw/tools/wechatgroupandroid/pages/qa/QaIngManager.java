@@ -59,7 +59,7 @@ public class QaIngManager  extends Manager {
         }
 
         if(cacheQuestionsId.length()<1){
-            return new Questions();
+            return null;
         }else {
             Questions questionsWithId = QaManager.getInstance().getQuestionsWithId(cacheQuestionsId);
             return questionsWithId==null?new Questions():questionsWithId;

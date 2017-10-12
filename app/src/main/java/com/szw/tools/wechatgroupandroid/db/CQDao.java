@@ -8,11 +8,11 @@ import com.litesuits.orm.db.enums.AssignType;
 /**
  * Created by shenmegui on 2017/9/29.
  */
-@Table("chatScoreDao")
-public class ChatScoreDao {
+@Table("chatdao")
+public class CQDao {
     // 指定自增，每个对象需要有一个主键
-    @PrimaryKey(AssignType.AUTO_INCREMENT)
-    private int id;
+    @PrimaryKey(AssignType.BY_MYSELF)
+    private String id;
     // 非空字段
     @NotNull
     private String chatName;
@@ -21,22 +21,22 @@ public class ChatScoreDao {
     @NotNull
     private String groupName;
 
-    // 非空字段
+    // 非空字段 cqlib 库角标
     @NotNull
-    private int score;
+    private int librarypos;
 
-    // 非空字段 问答结果库id
+    // 非空字段 cqitemspos 库角标
     @NotNull
-    private String qaResultId;
+    private int cqitemspos;
 
     @NotNull
-    private long socreTime;
+    private long time;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -56,27 +56,27 @@ public class ChatScoreDao {
         this.chatName = chatName;
     }
 
-    public int getScore() {
-        return score;
+    public int getLibrarypos() {
+        return librarypos;
     }
 
-    public void setScore(int score) {
-        this.score = score;
+    public void setLibrarypos(int librarypos) {
+        this.librarypos = librarypos;
     }
 
-    public String getQaResultId() {
-        return qaResultId;
+    public int getCqitemspos() {
+        return cqitemspos;
     }
 
-    public void setQaResultId(String qaResultId) {
-        this.qaResultId = qaResultId;
+    public void setCqitemspos(int cqitemspos) {
+        this.cqitemspos = cqitemspos;
     }
 
-    public long getSocreTime() {
-        return socreTime;
+    public long getTime() {
+        return time;
     }
 
-    public void setSocreTime(long socreTime) {
-        this.socreTime = socreTime;
+    public void setTime(long time) {
+        this.time = time;
     }
 }

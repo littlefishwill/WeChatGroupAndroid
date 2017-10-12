@@ -63,20 +63,51 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/tv_qa_bar_answer" android:layout_marginLeft="25dp"
+                android:layout_centerHorizontal="true" android:layout_marginTop="3dp"
+                android:layout_width="wrap_content"  android:textColor="@color/colorAccent" android:textStyle="bold"
+                android:layout_height="wrap_content" android:text="" android:textSize="12dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/qa_bar_contain_cq"
+            android:layout_width="match_parent" android:gravity="center_vertical"
+            android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginTop="3dp">
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:orientation="vertical">
+                android:layout_width="match_parent" android:layout_marginTop="5dip"
+                android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="20sp"
+                    android:layout_height="20sp" android:src="@mipmap/chouqian_sico" />
+
                 <TextView
-                    android:id="@+id/tv_qa_bar_answer"
-                    android:layout_centerHorizontal="true" android:layout_marginTop="3dp"
+                    android:id="@+id/tv_cq_bar_title" android:layout_marginLeft="3dp"
+                    android:layout_width="wrap_content"  android:textColor="#414141" android:textStyle="bold" android:singleLine="true"
+                    android:layout_height="wrap_content" android:text="抽签功能开启" android:textSize="12dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content" android:layout_marginTop="5dp" android:layout_marginLeft="25dp"
+                android:layout_height="wrap_content" android:orientation="horizontal">
+            <TextView
+                android:layout_marginLeft="0dp"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"  android:textColor="@color/colorAccent" android:textStyle="bold"
+                android:layout_height="wrap_content" android:text="命令：" android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/tv_cq_bar_comond" android:layout_marginLeft="0dp"
+                    android:layout_centerHorizontal="true"
                     android:layout_width="wrap_content"  android:textColor="@color/colorAccent" android:textStyle="bold"
-                    android:layout_height="wrap_content" android:text="" android:textSize="12dp" />
+                    android:layout_height="wrap_content" android:text="抽签、解签" android:textSize="12dp" />
 
             </LinearLayout>
 
         </LinearLayout>
-
-
 
 
 
