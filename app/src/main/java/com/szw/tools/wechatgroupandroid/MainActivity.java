@@ -226,7 +226,7 @@ public class MainActivity extends BaseActivity {
             }
         });
         va.setInterpolator(new DecelerateInterpolator());
-        va.setDuration(400);
+        va.setDuration(300);
         //开始动画
         va.start();
     }

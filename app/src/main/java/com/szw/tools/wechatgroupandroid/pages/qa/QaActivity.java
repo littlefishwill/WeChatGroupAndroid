@@ -37,6 +37,9 @@ public class QaActivity extends BaseActivity {
     private CommonAdapter questionsAdapter;
     private SimpleDateFormat timeformat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
     private List<Questions>  questionses;
+    private ScaleTextView libTitle;
+    private View userAskContain,romdomAskContan;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,12 +52,35 @@ public class QaActivity extends BaseActivity {
         emptyQA = (ScaleTextView) findViewById(R.id.stv_qa_empty_des);
         addQuestion = (FloatingActionButton) findViewById(R.id.fab);
         questionsList = (RecyclerView) findViewById(R.id.rv_qa_questions);
+        libTitle = (ScaleTextView) findViewById(R.id.stv_qa_empty_des);
+        userAskContain = findViewById(R.id.rv_qa_user_askq_item);
+        romdomAskContan = findViewById(R.id.rv_qa_radmon_autoradom_item);
+
+        askAndRodomLogic();
+
         addQuestionLogic();
         showQuestionLibrary();
         qaResultLogic();
 
 //        emptyQA.animateText("题库为空！点击右下角小红点可以添加题库.");
 
+    }
+
+    private void askAndRodomLogic() {
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.rv_qa_user_askq_item:
+                        startActivity(new Intent(QaActivity.this, QaChooseLibraryActivity.class));
+                        break;
+                    case R.id.rv_qa_radmon_autoradom_item:
+                        startActivity(new Intent(QaActivity.this, QaChooseLibraryActivity.class));
+                        break;
+                }
+            }
+        };
+        userAskContain.setOnClickListener(onClickListener);
     }
 
     private void qaResultLogic() {
@@ -77,6 +103,12 @@ public class QaActivity extends BaseActivity {
 
     private void showQuestionLibrary() {
     questionses =  QaManager.getInstance().getCacheQuestiones();
+        if(questionses.size()<1){
+            libTitle.animateText("-- 题库为空，请点击下方加号添加题库 --");
+        }else{
+            libTitle.animateText("-- 题库（"+questionses.size()+"）--");
+        }
+
     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
     questionsList.setLayoutManager(layoutManager);
         questionsAdapter = new CommonAdapter<Questions>(QaActivity.this, R.layout.item_questions, questionses) {
@@ -185,6 +217,12 @@ public class QaActivity extends BaseActivity {
            questionsAdapter.notifyDataSetChanged();
         }else if(requestCode==1 && resultCode==2){
             questionsAdapter.notifyDataSetChanged();
+        }
+
+        if(questionses.size()<1){
+            libTitle.animateText("-- 题库为空，请点击下方加号添加题库 --");
+        }else{
+            libTitle.animateText("-- 题库（"+questionses.size()+"）--");
         }
     }
 

@@ -46,7 +46,7 @@ public class CqManager extends Manager {
     @Override
     public void init() {
         caLib.add(initKZSQ());
-        cacheOpen = Sputils.getInstance(WeChatAdnroidGroup.getInstance()).getField(this, openSwitch, false);
+        cacheOpen = Sputils.getInstance(WeChatAdnroidGroup.getInstance()).getField(this, openSwitch, true);
     }
 
     private CQLibraryDao initKZSQ() {

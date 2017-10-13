@@ -21,6 +21,8 @@ import com.szw.tools.wechatgroupandroid.pages.qa.doamin.QaIng;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Question;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Questions;
 import com.szw.tools.wechatgroupandroid.pages.qa.listener.QaPlayListenerListener;
+import com.szw.tools.wechatgroupandroid.pages.score.ScoreManager;
+import com.szw.tools.wechatgroupandroid.pages.score.ScorePlayListener;
 import com.szw.tools.wechatgroupandroid.service.WeChatUtils;
 import com.szw.tools.wechatgroupandroid.service.domain.Chat;
 import com.szw.tools.wechatgroupandroid.utils.DpOrPx;
@@ -32,7 +34,7 @@ import com.szw.tools.wechatgroupandroid.utils.TimeFormatUtils;
 public class QuickTollBar  extends Toast{
     private static QuickTollBar quickTollBar;
     private View view;
-    private View cqContain;
+    private View cqContain,scContain,qaContain;
     public static QuickTollBar getInstance(Context context){
         if(quickTollBar==null) {
            quickTollBar = new QuickTollBar(context);
@@ -43,6 +45,18 @@ public class QuickTollBar  extends Toast{
     private QuickTollBar(Context context) {
         super(context);
         view = LayoutInflater.from(context).inflate(R.layout.bar_quick_tool, null);
+
+        //---qa
+        titleQa = (TextView) view.findViewById(R.id.tv_qa_bar_title);
+        tips = (TextView) view.findViewById(R.id.tv_qa_bar_tips);
+        times = (TextView) view.findViewById(R.id.tv_qa_bar_time);
+        qades = (TextView) view.findViewById(R.id.tv_qa_bar_qa_des);
+        qaanswer = (TextView) view.findViewById(R.id.tv_qa_bar_answer);
+        cqContain = view.findViewById(R.id.qa_bar_contain_cq);
+        scContain = view.findViewById(R.id.qa_bar_contain_sc);
+        qaContain= view.findViewById(R.id.qa_bar_contain);
+        // -- qa over
+
         setGravity(Gravity.TOP|Gravity.RIGHT,10, DpOrPx.dip2px(WeChatAdnroidGroup.getInstance(),50));
         setDuration(LENGTH_LONG);
         // question logic
@@ -54,23 +68,12 @@ public class QuickTollBar  extends Toast{
     private TextView titleQa,tips,times,qades,qaanswer;
 
     private void QaLogic(View view) {
-        titleQa = (TextView) view.findViewById(R.id.tv_qa_bar_title);
-        tips = (TextView) view.findViewById(R.id.tv_qa_bar_tips);
-        times = (TextView) view.findViewById(R.id.tv_qa_bar_time);
-        qades = (TextView) view.findViewById(R.id.tv_qa_bar_qa_des);
-        qaanswer = (TextView) view.findViewById(R.id.tv_qa_bar_answer);
-        cqContain = view.findViewById(R.id.qa_bar_contain_cq);
-
-        View qaContain= view.findViewById(R.id.qa_bar_contain);
-        Questions openQusetions = QaIngManager.getInstance().getQaNowQuestions();
-        if(openQusetions==null){
+        if(!QaManager.getInstance().isOpen()){
             qaContain.setVisibility(View.GONE);
             return;
         }
+
         qaContain.setVisibility(View.VISIBLE);
-        titleQa.setText(openQusetions.getTitle()+"("+openQusetions.getQuestions().size()+")");
-        tips.setText("问答倒计时:");
-        times.setText(10+"");
 
         QaplayLogic();
 
@@ -135,9 +138,18 @@ public class QuickTollBar  extends Toast{
         QaLogic(view);
         //--cq
         CqLogic();
-
+        //--score
+        ScoreLogic();
 
         show();
+    }
+
+    private void ScoreLogic() {
+        if(ScoreManager.getInstance().isOpen()){
+            scContain.setVisibility(View.VISIBLE);
+        }else{
+            scContain.setVisibility(View.GONE);
+        }
     }
 
     private void CqLogic() {
@@ -155,10 +167,13 @@ public class QuickTollBar  extends Toast{
     }
 
     private void QaplayLogic() {
+        // --- qa player custom
         if(QaIngManager.getInstance().getQaNowQuestions()!=null) {
             QaIngManager.getInstance().getQaPlayer().play(new QaPlayListenerListener() {
                 @Override
                 public void onReady(Questions questions, int current, long currentTime, String tip) {
+                    Questions qaNowQuestions = QaIngManager.getInstance().getQaNowQuestions();
+                    titleQa.setText(qaNowQuestions.getTitle()+"("+qaNowQuestions.getQuestions().size()+")");
                     qades.setText(tip);
                     times.setText(TimeFormatUtils.formatSecondsUseCode(currentTime / 1000));
                     tips.setText(tip);

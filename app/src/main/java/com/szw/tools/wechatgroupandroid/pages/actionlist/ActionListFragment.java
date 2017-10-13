@@ -14,7 +14,10 @@ import com.szw.tools.wechatgroupandroid.R;
 import com.szw.tools.wechatgroupandroid.pages.actionlist.domain.Action;
 import com.szw.tools.wechatgroupandroid.pages.cq.CqManager;
 import com.szw.tools.wechatgroupandroid.pages.qa.QaActivity;
+import com.szw.tools.wechatgroupandroid.pages.qa.QaIngManager;
+import com.szw.tools.wechatgroupandroid.pages.qa.QaManager;
 import com.szw.tools.wechatgroupandroid.pages.score.GroupScoreListActivity;
+import com.szw.tools.wechatgroupandroid.pages.score.ScoreManager;
 import com.szw.tools.wechatgroupandroid.view.adapter.CommonAdapter;
 import com.szw.tools.wechatgroupandroid.view.adapter.CommonViewHolder;
 
@@ -48,10 +51,10 @@ public class ActionListFragment  extends BaseFragment{
 
                 switch (action.getActionId()){
                     case ActionManager.Action_Id_QA:
-                        switchButton.setVisibility(View.GONE);
+                        switchButton.setChecked(QaManager.getInstance().isOpen());
                         break;
                     case ActionManager.Action_Id_JF:
-//                        startActivity(new Intent(getActivity(), GroupScoreListActivity.class));
+                        switchButton.setChecked(ScoreManager.getInstance().isOpen());
                         break;
                     case ActionManager.Action_Id_CQ:
                           switchButton.setChecked(CqManager.getInstance().isOpen());
@@ -63,9 +66,15 @@ public class ActionListFragment  extends BaseFragment{
                     public void onCheckedChanged(SwitchButton view, boolean isChecked) {
                         Action action = (Action) view.getTag();
                         switch (action.getActionId()){
+                            case ActionManager.Action_Id_QA:
+                                QaManager.getInstance().open(isChecked);
+                                break;
                             case ActionManager.Action_Id_CQ:
 //                                startActivity(new Intent(getActivity(), GroupScoreListActivity.class));
                                 CqManager.getInstance().open(isChecked);
+                                break;
+                            case ActionManager.Action_Id_JF:
+                                ScoreManager.getInstance().open(isChecked);
                                 break;
                         }
                     }

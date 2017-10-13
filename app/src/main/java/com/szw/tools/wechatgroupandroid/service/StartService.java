@@ -31,7 +31,7 @@ public class StartService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("Server","ServiceStart");
-        useForeground(getString(R.string.app_name),"正在后台服务中...~");
+        useForeground(getString(R.string.app_name),"正在服务,进入微信任意聊天可发现我的存在.");
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -43,7 +43,7 @@ public class StartService extends Service {
      * otherwise it can't do what we want in Android 4.4 KitKat,
      * it can only show the application info page which contains the 'Force Close' button.*/
         NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(StartService.this)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.wxjl_ico)
                 .setTicker(tickerText)
                 .setWhen(System.currentTimeMillis())
                 .setContentTitle(getString(R.string.app_name))

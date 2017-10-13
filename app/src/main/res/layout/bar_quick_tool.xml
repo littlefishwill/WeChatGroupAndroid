@@ -14,13 +14,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" android:orientation="vertical" android:padding="10dp" >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp" android:src="@mipmap/wxjl_ico" />
         <TextView
             android:layout_width="wrap_content" android:text="@string/app_name" android:textSize="15sp"
-            android:layout_height="wrap_content" android:textColor="#414141"
+            android:layout_height="wrap_content" android:textColor="#414141" android:layout_marginLeft="10dp"
             android:textStyle="bold"
             />
-
-
+        </LinearLayout>
         <LinearLayout
             android:id="@+id/qa_bar_contain"
             android:layout_width="match_parent" android:gravity="center_vertical"
@@ -91,19 +96,57 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content" android:layout_marginTop="5dp" android:layout_marginLeft="25dp"
+                android:layout_width="wrap_content" android:layout_marginTop="5dp"
                 android:layout_height="wrap_content" android:orientation="horizontal">
             <TextView
                 android:layout_marginLeft="0dp"
                 android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"  android:textColor="@color/colorAccent" android:textStyle="bold"
-                android:layout_height="wrap_content" android:text="命令：" android:textSize="12dp" />
+                android:layout_height="wrap_content" android:text="支持命令：" android:textSize="12dp" />
 
                 <TextView
                     android:id="@+id/tv_cq_bar_comond" android:layout_marginLeft="0dp"
                     android:layout_centerHorizontal="true"
                     android:layout_width="wrap_content"  android:textColor="@color/colorAccent" android:textStyle="bold"
                     android:layout_height="wrap_content" android:text="抽签、解签" android:textSize="12dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/qa_bar_contain_sc"
+            android:layout_width="match_parent" android:gravity="center_vertical"
+            android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginTop="3dp">
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_marginTop="5dip"
+                android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="20sp"
+                    android:layout_height="20sp" android:src="@mipmap/score_small" />
+
+                <TextView
+                    android:id="@+id/tv_sc_bar_title" android:layout_marginLeft="3dp"
+                    android:layout_width="wrap_content"  android:textColor="#414141" android:textStyle="bold" android:singleLine="true"
+                    android:layout_height="wrap_content" android:text="分数查询功能开启" android:textSize="12dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content" android:layout_marginTop="5dp"
+                android:layout_height="wrap_content" android:orientation="horizontal">
+                <TextView
+                    android:layout_marginLeft="0dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_width="wrap_content"  android:textColor="@color/colorAccent" android:textStyle="bold"
+                    android:layout_height="wrap_content" android:text="支持命令：" android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/tv_sc_bar_comond" android:layout_marginLeft="0dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_width="wrap_content"  android:textColor="@color/colorAccent" android:textStyle="bold"
+                    android:layout_height="wrap_content" android:text="查分、查分数、\r\n查排行、查排名" android:textSize="12dp" />
 
             </LinearLayout>
 

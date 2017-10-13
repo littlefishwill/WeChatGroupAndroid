@@ -11,6 +11,7 @@ import com.szw.tools.wechatgroupandroid.pages.qa.doamin.QaIng;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Question;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Questions;
 import com.szw.tools.wechatgroupandroid.pages.qa.listener.QuestiionLoadListener;
+import com.szw.tools.wechatgroupandroid.utils.Sputils;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -34,6 +35,9 @@ public class QaManager extends Manager {
     public static String qaResultFiles =WeChatAdnroidGroup.getInstance().getString(R.string.qa_questions_qaresult_folder_name);
     public static String endDes = WeChatAdnroidGroup.getInstance().getString(R.string.qa_questions_file_enddes);
     public static String endDesResult = WeChatAdnroidGroup.getInstance().getString(R.string.qa_questions_file_result_enddes);
+
+    private static  boolean cacheOpen = false;
+    private static  final String openSwitch = "qaswitch";
 
     public static QaManager  getInstance(){
         if(qaManager==null){
@@ -158,7 +162,16 @@ public class QaManager extends Manager {
 
     @Override
     public void init() {
+        cacheOpen = Sputils.getInstance(WeChatAdnroidGroup.getInstance()).getField(this, openSwitch, true);
+    }
 
+    public boolean isOpen(){
+        return  cacheOpen;
+    }
+
+    public void open(boolean neddOpen){
+        cacheOpen = neddOpen;
+        Sputils.getInstance(WeChatAdnroidGroup.getInstance()).putFiled(this,openSwitch,neddOpen);
     }
 
     public List<Questions> getCacheQuestiones() {

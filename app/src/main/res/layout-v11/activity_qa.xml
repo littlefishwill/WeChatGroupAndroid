@@ -5,14 +5,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"   android:background="#EBEBEB">
 
+    <android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardElevation="1dp" android:layout_marginTop="10dp">
+    <RelativeLayout
+        android:id="@+id/rv_qa_result_item"
+        android:layout_width="match_parent"
+        android:layout_height="60dp" android:clickable="true"
+        android:padding="3dp"  android:background="?android:attr/selectableItemBackground">
+
+        <ImageView
+            android:layout_width="30dp" android:layout_centerVertical="true"
+            android:layout_marginLeft="30dp"
+            android:layout_height="30dp" android:src="@drawable/qa_result_ico" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="@string/action_qa_answer_title"
+            android:layout_height="wrap_content" android:layout_marginLeft="80dp"
+            android:textSize="17sp"  android:textColor="#4D4D4D"  android:layout_centerVertical="true" />
+
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="25dp"
+            android:layout_height="25dp" android:layout_marginRight="20dp"
+            android:src="@drawable/right_jt" />
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="#FFFFFF"
-        app:cardElevation="1dp" android:layout_marginTop="20dp">
+        app:cardElevation="1dp" android:layout_marginTop="10dp">
         <RelativeLayout
-            android:id="@+id/rv_qa_result_item"
+            android:id="@+id/rv_qa_user_askq_item"
             android:layout_width="match_parent"
             android:layout_height="60dp" android:clickable="true"
             android:padding="3dp"  android:background="?android:attr/selectableItemBackground">
@@ -20,19 +51,62 @@
             <ImageView
                 android:layout_width="30dp" android:layout_centerVertical="true"
                 android:layout_marginLeft="30dp"
-                android:layout_height="30dp" android:src="@drawable/qa_result_ico" />
+                android:layout_height="30dp" android:src="@mipmap/tiwen_ico" />
 
             <TextView
                 android:layout_width="wrap_content"
-                android:text="@string/action_qa_answer_title"
+                android:text="@string/action_qa_ask_title"
                 android:layout_height="wrap_content" android:layout_marginLeft="80dp"
                 android:textSize="17sp"  android:textColor="#4D4D4D"  android:layout_centerVertical="true" />
 
             <ImageView
+                android:id="@+id/iv_qa_ask_play"  android:padding="10dp"
+                android:layout_alignParentRight="true" android:layout_centerVertical="true"
+                android:layout_width="50dip" android:layout_marginRight="11dp"
+                android:layout_height="50dip" android:src="@mipmap/qa_play" />
+
+            <ImageView
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:layout_width="25dp"
-                android:layout_height="25dp" android:layout_marginRight="20dp"
+                android:layout_width="25dp" android:visibility="gone"
+                android:layout_height="25dp" android:layout_marginRight="0dp"
+                android:src="@drawable/right_jt" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="#FFFFFF"
+        app:cardElevation="1dp" android:layout_marginTop="1px">
+        <RelativeLayout
+            android:id="@+id/rv_qa_radmon_autoradom_item"
+            android:layout_width="match_parent"
+            android:layout_height="60dp" android:clickable="true"
+            android:padding="3dp"  android:background="?android:attr/selectableItemBackground">
+
+            <ImageView
+                android:layout_width="30dp" android:layout_centerVertical="true"
+                android:layout_marginLeft="30dp"
+                android:layout_height="30dp" android:src="@mipmap/xunhuan_ico" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="@string/action_qa_radomqa_title"
+                android:layout_height="wrap_content" android:layout_marginLeft="80dp"
+                android:textSize="17sp"  android:textColor="#4D4D4D"  android:layout_centerVertical="true" />
+
+            <ImageView
+                android:id="@+id/iv_qa_autorodom_play" android:padding="10dp"
+                android:layout_alignParentRight="true" android:layout_centerVertical="true"
+                android:layout_width="50dip" android:layout_marginRight="11dp"
+                android:layout_height="50dip" android:src="@mipmap/qa_play" />
+
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="25dp" android:visibility="gone"
+                android:layout_height="25dp" android:layout_marginRight="0dp"
                 android:src="@drawable/right_jt" />
 
         </RelativeLayout>
@@ -40,18 +114,15 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" android:layout_marginTop="10dp">
 
         <com.szw.tools.wechatgroupandroid.view.htext.ScaleTextView
             android:id="@+id/stv_qa_empty_des"
-            android:layout_centerInParent="true"
-            android:layout_width="match_parent" android:gravity="center"
-            android:layout_centerVertical="true"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textStyle="bold"
-            android:textColor="#FB5F5C"
-            android:textSize="18sp"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:gravity="center"
+            android:text="-- 题库 --" android:layout_centerHorizontal="true"
+            android:textColor="#7c7c7c"
+            android:textSize="12sp"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
@@ -61,9 +132,10 @@
             android:layout_height="150dp" android:layout_alignParentBottom="true" android:layout_alignParentRight="true"
             android:layout_margin="40dp"/>
 
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_qa_questions"
-            android:layout_width="match_parent" android:layout_marginTop="30dp"
+            android:layout_width="match_parent" android:layout_marginTop="25dp"
             android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
 
     </RelativeLayout>

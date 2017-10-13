@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
     <color name="activity_bg">#212121</color>
     <color name="button_normal_bg">#26b99a</color>
     <color name="colorhint">#FDFCF7</color>

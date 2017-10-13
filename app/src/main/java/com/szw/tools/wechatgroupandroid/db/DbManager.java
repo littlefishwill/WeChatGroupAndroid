@@ -9,7 +9,9 @@ import com.szw.tools.wechatgroupandroid.Manager;
 import com.szw.tools.wechatgroupandroid.WeChatAdnroidGroup;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by shenmegui on 2017/9/29.
@@ -96,6 +98,58 @@ public class DbManager extends Manager {
             chatScoreDao.setChatName(name);
             chatScoreDao.setScore(socre);
             chatScoreDaos.add(chatScoreDao);
+        }
+        return  chatScoreDaos;
+    }
+
+    /**
+     * 查询组，某个成员的总分
+     * @param groupName
+     * @param chatname
+     * @return
+     */
+    public List<ChatScoreDao> getChatScoreInGroup(String groupName,String chatname){
+        List<ChatScoreDao> chatScoreDaos = new ArrayList<>();
+        Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select chatName,sum(score) as  score from chatScoreDao  where groupName = '"+groupName+"' and chatName = '"+chatname+"' group by chatName order by socreTime desc", null);
+        while (cursor.moveToNext()){
+            String name = cursor.getString(cursor.getColumnIndex("chatName"));
+            int socre = cursor.getInt(cursor.getColumnIndex("score"));
+            ChatScoreDao chatScoreDao = new ChatScoreDao();
+            chatScoreDao.setChatName(name);
+            chatScoreDao.setScore(socre);
+            chatScoreDaos.add(chatScoreDao);
+        }
+        return  chatScoreDaos;
+    }
+
+    /**
+     * 查询组，用户提问选择的库
+     * @return
+     */
+    public Map<String,QaChoose> getUserAskChooseLib(){
+        Map<String,QaChoose> chatScoreDaos = new HashMap<>();
+        Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select * from qalibchoose  where userAsk = 1", null);
+        while (cursor.moveToNext()){
+            QaChoose qaChoose = new QaChoose();
+            qaChoose.setLibId(cursor.getString(cursor.getColumnIndex("libId")));
+            qaChoose.setRadomAsk(cursor.getInt(cursor.getColumnIndex("radomAsk")));
+            qaChoose.setUserAsk(cursor.getInt(cursor.getColumnIndex("userAsk")));
+        }
+        return  chatScoreDaos;
+    }
+
+    /**
+     * 查询组 随机提问题库
+     * @return
+     */
+    public Map<String,QaChoose> getRadomAskChooseLib(){
+        Map<String,QaChoose> chatScoreDaos = new HashMap<>();
+        Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select * from qalibchoose  where radomAsk = 1", null);
+        while (cursor.moveToNext()){
+            QaChoose qaChoose = new QaChoose();
+            qaChoose.setLibId(cursor.getString(cursor.getColumnIndex("libId")));
+            qaChoose.setRadomAsk(cursor.getInt(cursor.getColumnIndex("radomAsk")));
+            qaChoose.setUserAsk(cursor.getInt(cursor.getColumnIndex("userAsk")));
         }
         return  chatScoreDaos;
     }
