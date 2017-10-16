@@ -22,6 +22,8 @@ import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Questions;
 import com.szw.tools.wechatgroupandroid.pages.qa.listener.QuestiionLoadListener;
 import com.szw.tools.wechatgroupandroid.view.adapter.CommonAdapter;
 import com.szw.tools.wechatgroupandroid.view.adapter.CommonViewHolder;
+import com.szw.tools.wechatgroupandroid.view.dialog.AskRodomOpenActivity;
+import com.szw.tools.wechatgroupandroid.view.dialog.DialogActivity;
 import com.szw.tools.wechatgroupandroid.view.htext.ScaleTextView;
 
 import java.text.SimpleDateFormat;
@@ -39,6 +41,7 @@ public class QaActivity extends BaseActivity {
     private List<Questions>  questionses;
     private ScaleTextView libTitle;
     private View userAskContain,romdomAskContan;
+    private ImageView userAskPlay,radomPlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,9 @@ public class QaActivity extends BaseActivity {
         userAskContain = findViewById(R.id.rv_qa_user_askq_item);
         romdomAskContan = findViewById(R.id.rv_qa_radmon_autoradom_item);
 
+        userAskPlay = (ImageView) findViewById(R.id.iv_qa_ask_play);
+        radomPlay = (ImageView) findViewById(R.id.iv_qa_autorodom_play);
+
         askAndRodomLogic();
 
         addQuestionLogic();
@@ -70,17 +76,45 @@ public class QaActivity extends BaseActivity {
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(QaActivity.this, QaChooseLibraryActivity.class);
                 switch (v.getId()) {
                     case R.id.rv_qa_user_askq_item:
-                        startActivity(new Intent(QaActivity.this, QaChooseLibraryActivity.class));
+                        intent.putExtra("type",0);
                         break;
                     case R.id.rv_qa_radmon_autoradom_item:
-                        startActivity(new Intent(QaActivity.this, QaChooseLibraryActivity.class));
+                        intent.putExtra("type",1);
                         break;
                 }
+
+                startActivity(intent);
+
             }
         };
         userAskContain.setOnClickListener(onClickListener);
+        romdomAskContan.setOnClickListener(onClickListener);
+
+        View.OnClickListener playAskRadom = new View.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(QaActivity.this, AskRodomOpenActivity.class);
+                switch (v.getId()){
+                    case R.id.iv_qa_ask_play:
+                        intent.putExtra("type",0);
+                        break;
+                    case R.id.iv_qa_autorodom_play:
+                        intent.putExtra("type",1);
+                        break;
+                }
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(QaActivity.this, v, getString(R.string.transition_dialog));
+                startActivityForResult(intent, 1, options.toBundle());
+            }
+        };
+        userAskPlay.setOnClickListener(playAskRadom);
+        radomPlay.setOnClickListener(playAskRadom);
+
+        fillAskRodomSwitchLogic();
+
     }
 
     private void qaResultLogic() {
@@ -219,11 +253,31 @@ public class QaActivity extends BaseActivity {
             questionsAdapter.notifyDataSetChanged();
         }
 
+        if(requestCode==1 && resultCode==2){
+            fillAskRodomSwitchLogic();
+            questionsAdapter.notifyDataSetChanged();
+        }
+
         if(questionses.size()<1){
             libTitle.animateText("-- 题库为空，请点击下方加号添加题库 --");
         }else{
             libTitle.animateText("-- 题库（"+questionses.size()+"）--");
         }
+    }
+
+    public void fillAskRodomSwitchLogic(){
+        if(QaUserAskManager.getInstance().isOpen()){
+            userAskPlay.setImageResource(R.drawable.qa_stop);
+        }else{
+            userAskPlay.setImageResource(R.mipmap.qa_play);
+        }
+
+        if(QaRadomAskManager.getInstance().isOpen()){
+            radomPlay.setImageResource(R.drawable.qa_stop);
+        }else{
+            radomPlay.setImageResource(R.mipmap.qa_play);
+        }
+
     }
 
     @Override

@@ -32,6 +32,15 @@
         </activity>
 
         <activity
+            android:name=".view.dialog.AskRodomOpenActivity"
+            android:parentActivityName=".pages.qa.QaActivity"
+            android:theme="@style/AppTheme.Dialog">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+
+        <activity
             android:name=".pages.qa.AddQuestionQaActivity"
             android:parentActivityName=".pages.qa.QuestionsShowAvtivity"
             android:theme="@style/AppTheme.Dialog">

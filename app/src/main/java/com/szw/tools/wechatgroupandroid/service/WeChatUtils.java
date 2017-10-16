@@ -208,7 +208,8 @@ public class WeChatUtils {
             if(imageicoS.size()>0){
                 AccessibilityNodeInfo imageico = imageicoS.get(0);
                 CharSequence contentDescription = imageico.getContentDescription();
-                cacheChat.setName(contentDescription.toString().replace("头像", ""));
+                String chatName = contentDescription.toString().replace("头像", "");
+                cacheChat.setName(chatName);
 
                 //----根据名称查询，首页文字变化
                 List<AccessibilityNodeInfo> homeUserItemName = getRootInActiveWindow().findAccessibilityNodeInfosByViewId(WECHAT_ID_CHATLIST_LIST_ITEM_NAME_TEXT);
@@ -216,7 +217,7 @@ public class WeChatUtils {
                 for(int i=0;i<homeUserItemName.size();i++){
                     if(homeUserItemName.get(i).getText().toString().trim().equals(cacheWeChatGroup.getName())){
                         String text = homeUserItemText.get(i).getText().toString();
-                        if(cacheChat!=null && cacheChat.getMessage()!=null && cacheChat.getMessage().equals(text)){
+                        if(cacheChat!=null && cacheChat.getMessage()!=null && cacheChat.getMessage().equals(text) && cacheChat.getName().equals(chatName)){
                             // --- 过滤重复信息
 //                            openKeyBord(true);
                             return null;

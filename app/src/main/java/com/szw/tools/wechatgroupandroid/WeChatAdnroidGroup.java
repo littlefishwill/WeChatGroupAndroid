@@ -5,6 +5,8 @@ import android.app.Application;
 import com.szw.tools.wechatgroupandroid.db.DbManager;
 import com.szw.tools.wechatgroupandroid.pages.cq.CqManager;
 import com.szw.tools.wechatgroupandroid.pages.qa.QaManager;
+import com.szw.tools.wechatgroupandroid.pages.qa.QaRadomAskManager;
+import com.szw.tools.wechatgroupandroid.pages.qa.QaUserAskManager;
 import com.szw.tools.wechatgroupandroid.pages.score.ScoreManager;
 
 /**
@@ -21,6 +23,8 @@ public class WeChatAdnroidGroup extends Application {
         super.onCreate();
         weChatAdnroidGroup = this;
         QaManager.getInstance().init();
+        QaUserAskManager.getInstance().init();
+        QaRadomAskManager.getInstance().init();
 
         CqManager.getInstance().init();
         ScoreManager.getInstance().init();

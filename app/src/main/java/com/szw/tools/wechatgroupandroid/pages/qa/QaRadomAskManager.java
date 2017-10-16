@@ -7,20 +7,20 @@ import com.szw.tools.wechatgroupandroid.utils.Sputils;
 /**
  * Created by shenmegui on 2017/10/13.
  */
-public class QaUserAskManager extends Manager {
-    private static  final String openSwitch = "qauserask";
+public class QaRadomAskManager extends Manager {
+    private static  final String openSwitch = "qaradomask";
     private static  boolean cacheOpen = false;
-    private static  QaUserAskManager qaUserAskManager;
-    public static QaUserAskManager getInstance(){
+    private static QaRadomAskManager qaUserAskManager;
+    public static QaRadomAskManager getInstance(){
         if(qaUserAskManager==null){
-            qaUserAskManager = new QaUserAskManager();
+            qaUserAskManager = new QaRadomAskManager();
         }
         return qaUserAskManager;
     }
 
     @Override
     public String getSpNameSpec() {
-        return "QaUserAskManager";
+        return "QaRadomAskManager";
     }
 
     @Override

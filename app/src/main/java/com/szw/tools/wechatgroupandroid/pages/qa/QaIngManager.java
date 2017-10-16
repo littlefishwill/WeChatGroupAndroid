@@ -6,11 +6,8 @@ import android.util.Log;
 import com.szw.tools.wechatgroupandroid.Manager;
 import com.szw.tools.wechatgroupandroid.WeChatAdnroidGroup;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.QaIng;
-import com.szw.tools.wechatgroupandroid.pages.qa.doamin.QaIng_Question;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Questions;
 import com.szw.tools.wechatgroupandroid.pages.qa.listener.QaIngLoadListener;
-import com.szw.tools.wechatgroupandroid.pages.qa.listener.QaPlayListenerListener;
-import com.szw.tools.wechatgroupandroid.service.domain.WeChat;
 import com.szw.tools.wechatgroupandroid.utils.ObjSearUtils;
 import com.szw.tools.wechatgroupandroid.utils.Sputils;
 import java.io.File;
@@ -20,7 +17,7 @@ import java.io.File;
  */
 public class QaIngManager  extends Manager {
     private static QaIngManager qaIngManager;
-    private QaPlayer qaPlayer;
+    private QaLibraryPlayer qaPlayer;
     public static QaIngManager getInstance(){
         if(qaIngManager==null){
             qaIngManager = new QaIngManager();
@@ -32,9 +29,9 @@ public class QaIngManager  extends Manager {
 
     }
 
-    public QaPlayer getQaPlayer(){
+    public QaLibraryPlayer getQaPlayer(){
         if(qaPlayer==null){
-            qaPlayer = new QaPlayer();
+            qaPlayer = new QaLibraryPlayer();
         }
         return qaPlayer;
     }

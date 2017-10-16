@@ -50,6 +50,9 @@ public class PlayQuestionActivity extends BaseActivity {
                     QaIngManager.getInstance().setQaNowQuestions(questions);
                 }
 
+                QaUserAskManager.getInstance().open(false);
+                QaRadomAskManager.getInstance().open(false);
+
                 setResult(2);
                 finishAfterTransition();
             }

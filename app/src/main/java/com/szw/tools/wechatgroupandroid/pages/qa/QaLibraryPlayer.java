@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by shenmegui on 2017/9/26.
  */
-public class QaPlayer {
+public class QaLibraryPlayer {
     private int currentPlayPos;
     private Questions qaNowQuestions;
     private QaPlayListenerListener qaPlayListenerListener;
@@ -34,7 +34,7 @@ public class QaPlayer {
         QaIngManager.getInstance().loadQaIng(new QaIngLoadListener() {
             @Override
             public void onLoad(QaIng qaIng) {
-                QaPlayer.this.qaIng = qaIng;
+                QaLibraryPlayer.this.qaIng = qaIng;
                 qaNowQuestions = QaIngManager.getInstance().getQaNowQuestions();
                 final QaIng_Question qaIng_question = qaIng.getQaings().get(weChat.getName());
                 currentPlayPos = 0;

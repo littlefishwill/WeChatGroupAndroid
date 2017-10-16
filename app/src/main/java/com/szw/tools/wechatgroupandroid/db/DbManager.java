@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.litesuits.orm.LiteOrm;
+import com.litesuits.orm.db.DataBaseConfig;
 import com.litesuits.orm.db.assit.QueryBuilder;
 import com.szw.tools.wechatgroupandroid.Manager;
 import com.szw.tools.wechatgroupandroid.WeChatAdnroidGroup;
@@ -39,7 +40,12 @@ public class DbManager extends Manager {
     @Override
     public void init() {
         if (liteOrm == null) {
-            liteOrm = LiteOrm.newSingleInstance(WeChatAdnroidGroup.getInstance(), "liteorm.db");
+//            DataBaseConfig dataBaseConfig = new DataBaseConfig(WeChatAdnroidGroup.getInstance());
+//            dataBaseConfig.dbName = "liteorm.db";
+//            dataBaseConfig.dbVersion = 101;
+//            dataBaseConfig.debugged = true;
+//            this.liteOrm  = LiteOrm.newCascadeInstance(dataBaseConfig);
+            this.liteOrm = LiteOrm.newSingleInstance(WeChatAdnroidGroup.getInstance(), "liteorm.db");
         }
         liteOrm.setDebugged(true); // open the log
     }
@@ -70,15 +76,20 @@ public class DbManager extends Manager {
 
     public List<ChatScoreDao> getGroupInSCore(String groupName){
         List<ChatScoreDao> chatScoreDaos = new ArrayList<>();
-        Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select chatName,sum(score) as  score from chatScoreDao  where groupName = '"+groupName+"'  group by chatName order by socreTime desc", null);
-        while (cursor.moveToNext()){
-            String name = cursor.getString(cursor.getColumnIndex("chatName"));
-            int socre = cursor.getInt(cursor.getColumnIndex("score"));
-            ChatScoreDao chatScoreDao = new ChatScoreDao();
-            chatScoreDao.setChatName(name);
-            chatScoreDao.setScore(socre);
-            chatScoreDaos.add(chatScoreDao);
+        try {
+            Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select chatName,sum(score) as  score from chatScoreDao  where groupName = '"+groupName+"'  group by chatName order by socreTime desc", null);
+            while (cursor.moveToNext()){
+                String name = cursor.getString(cursor.getColumnIndex("chatName"));
+                int socre = cursor.getInt(cursor.getColumnIndex("score"));
+                ChatScoreDao chatScoreDao = new ChatScoreDao();
+                chatScoreDao.setChatName(name);
+                chatScoreDao.setScore(socre);
+                chatScoreDaos.add(chatScoreDao);
+            }
+        }catch (Exception e){
+
         }
+
         return  chatScoreDaos;
     }
 
@@ -90,15 +101,20 @@ public class DbManager extends Manager {
      */
     public List<ChatScoreDao> getGroupInSCore(String groupName,String qaId){
         List<ChatScoreDao> chatScoreDaos = new ArrayList<>();
-        Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select chatName,sum(score) as  score from chatScoreDao  where groupName = '"+groupName+"' and qaResultId = '"+qaId+"' group by chatName order by socreTime desc", null);
-        while (cursor.moveToNext()){
-            String name = cursor.getString(cursor.getColumnIndex("chatName"));
-            int socre = cursor.getInt(cursor.getColumnIndex("score"));
-            ChatScoreDao chatScoreDao = new ChatScoreDao();
-            chatScoreDao.setChatName(name);
-            chatScoreDao.setScore(socre);
-            chatScoreDaos.add(chatScoreDao);
+        try {
+            Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select chatName,sum(score) as  score from chatScoreDao  where groupName = '"+groupName+"' and qaResultId = '"+qaId+"' group by chatName order by socreTime desc", null);
+            while (cursor.moveToNext()){
+                String name = cursor.getString(cursor.getColumnIndex("chatName"));
+                int socre = cursor.getInt(cursor.getColumnIndex("score"));
+                ChatScoreDao chatScoreDao = new ChatScoreDao();
+                chatScoreDao.setChatName(name);
+                chatScoreDao.setScore(socre);
+                chatScoreDaos.add(chatScoreDao);
+            }
+        }catch (Exception e){
+
         }
+
         return  chatScoreDaos;
     }
 
@@ -110,14 +126,18 @@ public class DbManager extends Manager {
      */
     public List<ChatScoreDao> getChatScoreInGroup(String groupName,String chatname){
         List<ChatScoreDao> chatScoreDaos = new ArrayList<>();
-        Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select chatName,sum(score) as  score from chatScoreDao  where groupName = '"+groupName+"' and chatName = '"+chatname+"' group by chatName order by socreTime desc", null);
-        while (cursor.moveToNext()){
-            String name = cursor.getString(cursor.getColumnIndex("chatName"));
-            int socre = cursor.getInt(cursor.getColumnIndex("score"));
-            ChatScoreDao chatScoreDao = new ChatScoreDao();
-            chatScoreDao.setChatName(name);
-            chatScoreDao.setScore(socre);
-            chatScoreDaos.add(chatScoreDao);
+        try {
+            Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select chatName,sum(score) as  score from chatScoreDao  where groupName = '" + groupName + "' and chatName = '" + chatname + "' group by chatName order by socreTime desc", null);
+            while (cursor.moveToNext()) {
+                String name = cursor.getString(cursor.getColumnIndex("chatName"));
+                int socre = cursor.getInt(cursor.getColumnIndex("score"));
+                ChatScoreDao chatScoreDao = new ChatScoreDao();
+                chatScoreDao.setChatName(name);
+                chatScoreDao.setScore(socre);
+                chatScoreDaos.add(chatScoreDao);
+            }
+        }catch (Exception e){
+
         }
         return  chatScoreDaos;
     }
@@ -127,14 +147,21 @@ public class DbManager extends Manager {
      * @return
      */
     public Map<String,QaChoose> getUserAskChooseLib(){
+
         Map<String,QaChoose> chatScoreDaos = new HashMap<>();
-        Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select * from qalibchoose  where userAsk = 1", null);
-        while (cursor.moveToNext()){
-            QaChoose qaChoose = new QaChoose();
-            qaChoose.setLibId(cursor.getString(cursor.getColumnIndex("libId")));
-            qaChoose.setRadomAsk(cursor.getInt(cursor.getColumnIndex("radomAsk")));
-            qaChoose.setUserAsk(cursor.getInt(cursor.getColumnIndex("userAsk")));
+        try{
+            Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select id,radomAsk,userAsk  from  qaChoose  where userAsk = 1", null);
+            while (cursor.moveToNext()){
+                QaChoose qaChoose = new QaChoose();
+                qaChoose.setId(cursor.getString(cursor.getColumnIndex("id")));
+                qaChoose.setRadomAsk(cursor.getInt(cursor.getColumnIndex("radomAsk")));
+                qaChoose.setUserAsk(cursor.getInt(cursor.getColumnIndex("userAsk")));
+                chatScoreDaos.put(qaChoose.getId(),qaChoose);
+            }
+        }catch (Exception e){
+
         }
+
         return  chatScoreDaos;
     }
 
@@ -144,12 +171,17 @@ public class DbManager extends Manager {
      */
     public Map<String,QaChoose> getRadomAskChooseLib(){
         Map<String,QaChoose> chatScoreDaos = new HashMap<>();
-        Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select * from qalibchoose  where radomAsk = 1", null);
-        while (cursor.moveToNext()){
-            QaChoose qaChoose = new QaChoose();
-            qaChoose.setLibId(cursor.getString(cursor.getColumnIndex("libId")));
-            qaChoose.setRadomAsk(cursor.getInt(cursor.getColumnIndex("radomAsk")));
-            qaChoose.setUserAsk(cursor.getInt(cursor.getColumnIndex("userAsk")));
+        try{
+            Cursor cursor = liteOrm.getReadableDatabase().rawQuery("select id,radomAsk,userAsk from qaChoose  where radomAsk = 1", null);
+            while (cursor.moveToNext()){
+                QaChoose qaChoose = new QaChoose();
+                qaChoose.setId(cursor.getString(cursor.getColumnIndex("id")));
+                qaChoose.setRadomAsk(cursor.getInt(cursor.getColumnIndex("radomAsk")));
+                qaChoose.setUserAsk(cursor.getInt(cursor.getColumnIndex("userAsk")));
+                chatScoreDaos.put(qaChoose.getId(),qaChoose);
+            }
+        }catch (Exception e){
+
         }
         return  chatScoreDaos;
     }

@@ -8,11 +8,11 @@ import com.litesuits.orm.db.enums.AssignType;
 /**
  * 题库选择db
  */
-@Table("qalibchoose")
+@Table("qaChoose")
 public class QaChoose {
     // 指定自增，每个对象需要有一个主键
     @PrimaryKey(AssignType.BY_MYSELF)
-    private String libId;
+    private String id;
     // 非空字段
     @NotNull
     private int userAsk;
@@ -21,12 +21,12 @@ public class QaChoose {
     @NotNull
     private int radomAsk;
 
-    public String getLibId() {
-        return libId;
+    public String getId() {
+        return id;
     }
 
-    public void setLibId(String libId) {
-        this.libId = libId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public int getUserAsk() {
