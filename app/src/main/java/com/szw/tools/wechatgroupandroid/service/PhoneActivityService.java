@@ -16,6 +16,7 @@ import com.szw.tools.wechatgroupandroid.MainActivity;
 import com.szw.tools.wechatgroupandroid.WeChatAdnroidGroup;
 import com.szw.tools.wechatgroupandroid.pages.cq.CqManager;
 import com.szw.tools.wechatgroupandroid.pages.qa.QaIngManager;
+import com.szw.tools.wechatgroupandroid.pages.qa.QaUserAskManager;
 import com.szw.tools.wechatgroupandroid.pages.score.ScoreManager;
 import com.szw.tools.wechatgroupandroid.quicktool.QuickTollActivity;
 import com.szw.tools.wechatgroupandroid.quicktool.QuickTollBar;
@@ -82,8 +83,10 @@ public class PhoneActivityService extends AccessibilityService {
         WeChatUtils.getInstance().onGetMessage(event, new WeChatUtils.WeChatBaseListener<Chat>() {
             @Override
             public void onGet(Chat object) {
-                //答题
+                //传统答题
                 QaIngManager.getInstance().getQaPlayer().onReceive(object);
+                //自助答题
+                QaUserAskManager.getInstance().onRevceive(object);
                 //抽签
                 CqManager.getInstance().onReceive(object);
                 //分数

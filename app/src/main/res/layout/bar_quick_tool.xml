@@ -40,7 +40,7 @@
 
                 <TextView
                     android:id="@+id/tv_qa_bar_title" android:layout_marginLeft="3dp"
-                    android:layout_width="wrap_content"  android:textColor="#414141" android:textStyle="bold" android:singleLine="true"
+                    android:layout_width="wrap_content"  android:textColor="#414141" android:textStyle="bold"
                     android:layout_height="wrap_content" android:text="当前题库:脑经" android:textSize="12dp" />
 
             </LinearLayout>

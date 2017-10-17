@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/star_on"
                 fab:fab_size="mini"
-                fab:fab_label="选择题" />
+                fab:fab_label="选择题"  android:visibility="gone" />
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/menu_qa"

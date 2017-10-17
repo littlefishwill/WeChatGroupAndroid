@@ -17,6 +17,7 @@ public class ChatScoreDao {
     @NotNull
     private String chatName;
 
+
     // 非空字段
     @NotNull
     private String groupName;

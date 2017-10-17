@@ -5,5 +5,4 @@ package com.szw.tools.wechatgroupandroid.config;
  */
 public class Config {
 
-
 }
