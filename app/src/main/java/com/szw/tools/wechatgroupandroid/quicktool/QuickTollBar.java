@@ -19,6 +19,7 @@ import com.szw.tools.wechatgroupandroid.pages.cq.CqPlayListener;
 import com.szw.tools.wechatgroupandroid.pages.qa.QaIngManager;
 import com.szw.tools.wechatgroupandroid.pages.qa.QaManager;
 import com.szw.tools.wechatgroupandroid.pages.qa.QaPlayResultManager;
+import com.szw.tools.wechatgroupandroid.pages.qa.QaRadomAskManager;
 import com.szw.tools.wechatgroupandroid.pages.qa.QaUserAskManager;
 import com.szw.tools.wechatgroupandroid.pages.qa.QuestionsShowAvtivity;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.QaIng;
@@ -102,6 +103,15 @@ public class QuickTollBar  extends Toast{
         }
         QaIngManager.getInstance().getQaPlayer().quitePlay();
         quickTollBar = null;
+
+        if(QaUserAskManager.getInstance().isOpen()){
+            QaUserAskManager.getInstance().cancle();
+        }
+
+        if(QaRadomAskManager.getInstance().isOpen()){
+            QaRadomAskManager.getInstance().cancle();
+        }
+
 
     }
 
@@ -222,7 +232,7 @@ public class QuickTollBar  extends Toast{
                 @Override
                 public void onReadyQusetions(Questions questions, Question question,Chat chat,int choosePos) {
                     WeChatUtils.getInstance().sendText("@"+chat.getName()+"抽到题（"+questions.getTitle()+"中的第"+(choosePos+1)+"题.\r\n题目:"+question.getDes()+"("+question.getSource()+"分) 限时"+TimeFormatUtils.formatSeconds(question.getTime()/1000),true);
-                    titleQa.setText(questions.getTitle()+"中的第"+(choosePos+1)+"题");
+                    titleQa.setText(questions.getTitle()+"中的第"+(choosePos+1)+"题）");
                     qades.setText(question.getDes());
                     tips.setText("剩余");
                     qaanswer.setText("答案：" + QuestionsShowAvtivity.getString(question.getType2Answer()));
@@ -244,7 +254,7 @@ public class QuickTollBar  extends Toast{
                     qades.setText("等待发送“抽题”命令");
                     qaanswer.setText("");
 
-                    WeChatUtils.getInstance().sendText(chat.getName()+"回答正确！得"+question.getSource()+"分。\r\n 可以发送“抽题”继续答题了~",true);
+                    WeChatUtils.getInstance().sendText(chat.getName()+"回答正确！得"+question.getSource()+"分。\r\n 进行下一题问答。~",true);
                 }
 
                 @Override
@@ -264,7 +274,7 @@ public class QuickTollBar  extends Toast{
 
                 @Override
                 public void onFinish() {
-                    titleQa.setText("自助请求提问");
+                    titleQa.setText("随机抽题提问");
                     tips.setText("等待抽题");
                     times.setText("");
                     qades.setText("等待发送“抽题”命令");
@@ -280,7 +290,69 @@ public class QuickTollBar  extends Toast{
             });
         }
 
+        // radom ask
+        if(QaRadomAskManager.getInstance().isOpen()){
+            titleQa.setText("随机提问开启");
+            tips.setText("开始倒计时");
+            times.setText("");
+            qades.setText("即将开始自动随机抽题问答");
+            qaanswer.setText("");
+            QaRadomAskManager.getInstance().play(new QaRadomAskManager.QaRadomAskManagerListener() {
+                private long time;
+                @Override
+                public void onReadyQusetions(Questions questions, Question question, int choosePos) {
+                    WeChatUtils.getInstance().sendText("随机提问:《"+questions.getTitle()+"中的第"+(choosePos+1)+"题》\r\n题目:"+question.getDes()+"("+question.getSource()+"分) 限时"+TimeFormatUtils.formatSeconds(question.getTime()/1000),true);
+                    titleQa.setText(questions.getTitle()+"中的第"+(choosePos+1)+"题");
+                    qades.setText(question.getDes());
+                    tips.setText("剩余");
+                    qaanswer.setText("答案：" + QuestionsShowAvtivity.getString(question.getType2Answer()));
+                }
 
+                @Override
+                public void onAnswerRight(Chat chat, Question question) {
+                    ChatScoreDao chatScoreDao = new ChatScoreDao();
+                    chatScoreDao.setChatName(chat.getName());
+                    chatScoreDao.setGroupName(WeChatUtils.getInstance().getCacheWeChatGroup().getName());
+                    chatScoreDao.setScore(question.getSource());
+                    chatScoreDao.setQaResultId("ask");
+                    chatScoreDao.setSocreTime(System.currentTimeMillis());
+                    DbManager.getInstance().getLiteOrm().save(chatScoreDao);
+
+                    titleQa.setText("自助请求提问");
+                    tips.setText("等待抽题");
+                    times.setText("");
+                    qades.setText("等待发送“抽题”命令");
+                    qaanswer.setText("");
+
+                    WeChatUtils.getInstance().sendText(chat.getName()+"回答正确！得"+question.getSource()+"分。\r\n 即将发送下一道题目~",true);
+                }
+
+                @Override
+                public void onAnswerFaild(Chat weChat, Question question) {
+                    WeChatUtils.getInstance().sendText(weChat.getName()+"回答错误!\r\n剩余时间:"+TimeFormatUtils.formatSeconds(time/1000)+"?"+weChat.getMessage(),true);
+                }
+
+                @Override
+                public void onError(String msg, int errorCode) {
+                    if(errorCode==3){
+                        WeChatUtils.getInstance().sendText(msg,true);
+                        return;
+                    }
+                    tips.setText("错误："+msg);
+                }
+
+                @Override
+                public void onFinish() {
+                    WeChatUtils.getInstance().sendText("时间到此题无人回答正确,\r\n继续提问下一道题目。",true);
+                }
+
+                @Override
+                public void onTick(long time) {
+                    this.time = time;
+                    times.setText(TimeFormatUtils.formatSecondsUseCode(time / 1000));
+                }
+            });
+        }
     }
 
 

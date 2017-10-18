@@ -191,10 +191,14 @@ public class QaUserAskManager extends Manager {
                 }
             };
             countDownTimer.start();
-
-
         }
+    }
 
+    public void cancle(){
+        if(countDownTimer!=null) {
+            countDownTimer.cancel();
+        }
+        playingQuesions = null;
     }
 
 
