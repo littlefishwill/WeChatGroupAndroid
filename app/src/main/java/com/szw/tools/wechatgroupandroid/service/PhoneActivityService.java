@@ -84,6 +84,7 @@ public class PhoneActivityService extends AccessibilityService {
         WeChatUtils.getInstance().onGetMessage(event, new WeChatUtils.WeChatBaseListener<Chat>() {
             @Override
             public void onGet(Chat object) {
+
                 //传统答题
                 QaIngManager.getInstance().getQaPlayer().onReceive(object);
                 //自助答题

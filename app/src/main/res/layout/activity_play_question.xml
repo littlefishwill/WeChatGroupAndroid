@@ -30,10 +30,11 @@
             android:textAppearance="?android:textAppearanceLarge"/>
 
         <TextView
+            android:id="@+id/tv_play_custom_qa_des"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="开启后，请手动进入任意微信聊天界面,系统会默认10秒自动内发送题目，开始问答。'"
+            android:text="'"
             android:textAppearance="?android:textAppearanceMedium"/>
 
         <Button

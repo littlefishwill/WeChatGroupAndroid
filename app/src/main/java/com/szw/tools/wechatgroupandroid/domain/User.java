@@ -1,4 +1,4 @@
-package com.szw.tools.wechatgroupandroid.user;
+package com.szw.tools.wechatgroupandroid.domain;
 
 /**
  * Created by shenmegui on 2017/9/22.

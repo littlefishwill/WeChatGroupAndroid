@@ -2,6 +2,7 @@ package com.szw.tools.wechatgroupandroid.view.dialog;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -12,9 +13,14 @@ import android.widget.TextView;
 import com.szw.tools.wechatgroupandroid.BaseActivity;
 import com.szw.tools.wechatgroupandroid.MainActivity;
 import com.szw.tools.wechatgroupandroid.R;
+import com.szw.tools.wechatgroupandroid.db.DbManager;
+import com.szw.tools.wechatgroupandroid.db.QaChoose;
+import com.szw.tools.wechatgroupandroid.pages.qa.QaChooseLibraryActivity;
 import com.szw.tools.wechatgroupandroid.pages.qa.QaIngManager;
 import com.szw.tools.wechatgroupandroid.pages.qa.QaRadomAskManager;
 import com.szw.tools.wechatgroupandroid.pages.qa.QaUserAskManager;
+
+import java.util.Map;
 
 public class AskRodomOpenActivity extends BaseActivity {
 
@@ -22,6 +28,7 @@ public class AskRodomOpenActivity extends BaseActivity {
     private TextView title,des;
     private Button submit;
     private int type; // 0 = ask,1=radom
+    private boolean needChooseLib = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +68,15 @@ public class AskRodomOpenActivity extends BaseActivity {
                 des.setText("当前模式开启中，是否关闭该模式？");
                 submit.setText("停止问答");
             }else{
-                des.setText("开启该模式:当微信聊天中有人发送指令'来题'、'出题'、'给题'、'求题'，时系统会随机抽选选中题库的某一道题目进行提问，问答。" );
-                submit.setText("开启");
+                Map<String, QaChoose> userAskChooseLib = DbManager.getInstance().getUserAskChooseLib();
+                if(userAskChooseLib.size()>0) {
+                    des.setText("开启该模式:当微信聊天中有人发送指令'来题'、'出题'、'给题'、'求题'，时系统会随机抽选选中题库的某一道题目进行提问，问答。");
+                    submit.setText("开启");
+                }else{
+                    des.setText("当前无选中题库！\r\n您需要勾选任意题库，作为提问的库池.是否前往勾选？");
+                    submit.setText("去勾选题库");
+                    needChooseLib = true;
+                }
             }
         }else if(type==1){
             title.setText("随机无限抽题提问");
@@ -70,8 +84,16 @@ public class AskRodomOpenActivity extends BaseActivity {
                 des.setText("当前模式开启中，是否关闭该模式？");
                 submit.setText("停止问答");
             }else{
-                des.setText("开启该模式:当你进入微信任意聊天界面，系统会开始随机抽取选中题库中的题目进行问答。" );
-                submit.setText("开启");
+                Map<String, QaChoose> userRadomLibs = DbManager.getInstance().getRadomAskChooseLib();
+                if(userRadomLibs.size()>0){
+                    des.setText("开启该模式:当你进入微信任意聊天界面，系统会开始随机抽取选中题库中的题目进行问答。" );
+                    submit.setText("开启");
+                }else{
+                    des.setText("当前无选中题库！\r\n您需要勾选任意题库，作为提问的库池.是否前往勾选？");
+                    submit.setText("去勾选题库");
+                    needChooseLib = true;
+                }
+
             }
         }
 
@@ -79,26 +101,34 @@ public class AskRodomOpenActivity extends BaseActivity {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
-                if(type==0){
-                    if(QaUserAskManager.getInstance().isOpen()){
-                        QaUserAskManager.getInstance().open(false);
-                    }else{
-                        QaUserAskManager.getInstance().open(true);
-                        QaRadomAskManager.getInstance().open(false);
-                        QaIngManager.getInstance().setQaNowQuestions(null);
-                    }
-                }else if(type==1){
-                    if(QaRadomAskManager.getInstance().isOpen()){
-                        QaRadomAskManager.getInstance().open(false);
-                    }else{
-                        QaRadomAskManager.getInstance().open(true);
-                        QaUserAskManager.getInstance().open(false);
-                        QaIngManager.getInstance().setQaNowQuestions(null);
+                if(!needChooseLib) {
+                    if (type == 0) {
+                        if (QaUserAskManager.getInstance().isOpen()) {
+                            QaUserAskManager.getInstance().open(false);
+                        } else {
+                            QaUserAskManager.getInstance().open(true);
+                            QaRadomAskManager.getInstance().open(false);
+                            QaIngManager.getInstance().setQaNowQuestions(null);
+                        }
+                    } else if (type == 1) {
+                        if (QaRadomAskManager.getInstance().isOpen()) {
+                            QaRadomAskManager.getInstance().open(false);
+                        } else {
+                            QaRadomAskManager.getInstance().open(true);
+                            QaUserAskManager.getInstance().open(false);
+                            QaIngManager.getInstance().setQaNowQuestions(null);
+                        }
                     }
                 }
 
                 setResult(2);
                 finishAfterTransition();
+
+                if(needChooseLib){
+                    Intent intent = new Intent(AskRodomOpenActivity.this, QaChooseLibraryActivity.class);
+                    intent.putExtra("type",type);
+                    startActivity(intent);
+                }
 
             }
         });

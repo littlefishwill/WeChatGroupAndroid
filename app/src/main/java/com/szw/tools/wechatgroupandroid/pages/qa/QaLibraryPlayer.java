@@ -182,7 +182,8 @@ public class QaLibraryPlayer {
     public void onReceive(Chat chat){
         if(question!=null){
             for(String answer:question.getType2Answer()){
-                if(chat.getMessage().trim().toLowerCase().equals(answer.toLowerCase())){
+                String message = chat.getMessage();
+                if(message.trim().toLowerCase().equals(answer.toLowerCase())){
                     onAnswerRight(chat,question);
                     return;
                 }
@@ -201,7 +202,6 @@ public class QaLibraryPlayer {
             tips = "进入下一题";
         }
 
-
         ChatScoreDao  chatScoreDao = new ChatScoreDao();
         chatScoreDao.setChatName(chat.getName());
         chatScoreDao.setGroupName(WeChatUtils.getInstance().getCacheWeChatGroup().getName());
@@ -218,7 +218,7 @@ public class QaLibraryPlayer {
 
     private void onAnswerFail(Chat chat,Question question){
         QaPlayResultManager.getInstance().onAnswer(chat,false);
-        WeChatUtils.getInstance().sendText("@"+chat.getName() + "回答错误.\r\n该问题剩余回答时间为:"+ TimeFormatUtils.formatSecondsUseCode(keepTime/1000), true);
+        WeChatUtils.getInstance().sendText("@"+chat.getName()+":"+chat.getMessage() + "回答错误.\r\n该问题剩余回答时间为:"+ TimeFormatUtils.formatSecondsUseCode(keepTime/1000), true);
     }
 
 

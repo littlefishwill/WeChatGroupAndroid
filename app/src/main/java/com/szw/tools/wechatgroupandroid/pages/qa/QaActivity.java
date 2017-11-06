@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import com.szw.tools.wechatgroupandroid.BaseActivity;
 import com.szw.tools.wechatgroupandroid.R;
+import com.szw.tools.wechatgroupandroid.db.DbManager;
+import com.szw.tools.wechatgroupandroid.db.QaChoose;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Questions;
 import com.szw.tools.wechatgroupandroid.pages.qa.listener.QuestiionLoadListener;
 import com.szw.tools.wechatgroupandroid.view.adapter.CommonAdapter;
@@ -209,7 +211,7 @@ public class QaActivity extends BaseActivity {
         final AlertDialog.Builder normalDialog =
                 new AlertDialog.Builder(QaActivity.this);
         normalDialog.setTitle("删除文件");
-        Questions questions = (Questions) questionsAdapter.getmDatas().get(postation);
+        final Questions questions = (Questions) questionsAdapter.getmDatas().get(postation);
         normalDialog.setMessage("您确定要删除'"+questions.getTitle()+"'题库吗?" );
         normalDialog.setPositiveButton("确定",
                 new DialogInterface.OnClickListener() {
@@ -219,6 +221,14 @@ public class QaActivity extends BaseActivity {
                         QaManager.getInstance().delectQuestions((Questions) questionsAdapter.getmDatas().get(postation));
                         questionsAdapter.getmDatas().remove(postation);
                         questionsAdapter.notifyDataSetChanged();
+
+                        QaChoose qaChoose = new QaChoose();
+                        qaChoose.setId(questions.getId());
+                        qaChoose.setRadomAsk(0);
+                        qaChoose.setUserAsk(0);
+
+                        DbManager.getInstance().getLiteOrm().update(qaChoose);
+
                     }
                 });
                 normalDialog.setNegativeButton("取消",

@@ -2,6 +2,7 @@ package com.szw.tools.wechatgroupandroid.user;
 
 import com.szw.tools.wechatgroupandroid.Manager;
 import com.szw.tools.wechatgroupandroid.WeChatAdnroidGroup;
+import com.szw.tools.wechatgroupandroid.domain.User;
 import com.szw.tools.wechatgroupandroid.utils.Sputils;
 
 /**

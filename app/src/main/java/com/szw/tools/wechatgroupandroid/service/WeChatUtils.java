@@ -18,6 +18,7 @@ import com.szw.tools.wechatgroupandroid.service.domain.WeChat;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,7 +42,8 @@ public class WeChatUtils {
     private AccessibilityService accessibilityService;
     private WeChatBaseListener<WeChat> weChatBaseListener;
     private Chat cacheChat;
-    private Map<String,Chat> filterOwerChat = new LinkedHashMap<>();
+    private List<String> filterOwerChat = new LinkedList<>();
+
     public static WeChatUtils getInstance(){
         if(weChatUtils==null){
             weChatUtils = new WeChatUtils();
@@ -139,17 +141,13 @@ public class WeChatUtils {
 
     private boolean filterOwerSenndText(Chat weChatTellRecode) {
         boolean isSend  = false;
-        String filter = weChatTellRecode.getMessage().replace(".", "").trim().toString();
-        Set<Map.Entry<String, Chat>> entries = filterOwerChat.entrySet();
-        Iterator<Map.Entry<String, Chat>> iterator = entries.iterator();
-        while (iterator.hasNext()){
-            Map.Entry<String, Chat> next = iterator.next();
-            isSend =  next.getKey().startsWith(filter);
-            Log.e("Filter",filter+"?"+isSend);
-            if(isSend){
-                return  true;
+
+        for(String cacheStr:filterOwerChat){
+            if(weChatTellRecode.getMessage().startsWith(cacheStr)){
+                return true;
             }
         }
+
 
         return isSend;
     }
@@ -169,17 +167,17 @@ public class WeChatUtils {
             AccessibilityNodeInfo accessibilityNodeInfo = accessibilityNodeInfosByViewId.get(0);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+
                 if(text.trim().length()>0) {
                     cacheSendText = text;
-//                    if(cacheChat!=null) {
-//                        cacheChat.setMessage(cacheSendText);
-//                    }
                 }
+
                 ClipboardManager clipboard = (ClipboardManager) WeChatAdnroidGroup.getInstance().getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("des", text);
                 clipboard.setPrimaryClip(clip);
                 accessibilityNodeInfo.performAction(AccessibilityNodeInfo.ACTION_FOCUS);
                 accessibilityNodeInfo.performAction(AccessibilityNodeInfo.ACTION_PASTE);
+
             }
 
             if(isSend) {
@@ -189,16 +187,19 @@ public class WeChatUtils {
                     if (accessibilityNodeInfo1.isClickable()) {
 
                         if(filterOwerChat.size()>10){
-                            filterOwerChat.clear();
+                            filterOwerChat.remove(0);
                         }
 
-                        filterOwerChat.put(text,null);
+                        String sendMessageCache = text;
+                        if(sendMessageCache.length()>5){
+                            sendMessageCache = sendMessageCache.substring(0,5);
+                        }
+
+                        filterOwerChat.add(sendMessageCache);
                         accessibilityNodeInfo1.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                     }
                 }
             }
-
-
         }
     }
 
@@ -253,7 +254,14 @@ public class WeChatUtils {
                 List<AccessibilityNodeInfo> homeUserItemText = getRootInActiveWindow().findAccessibilityNodeInfosByViewId(WECHAT_ID_CHATLIST_LIST_ITEM_CONTENT_TEXT);
                 for(int i=0;i<homeUserItemName.size();i++){
                     if(homeUserItemName.get(i).getText().toString().trim().equals(cacheWeChatGroup.getName())){
+
                         String text = homeUserItemText.get(i).getText().toString();
+
+                        Log.i("WeChatUtils",text);
+                        if(text.startsWith(chatName+":")){
+                            text = text.split(":")[1];
+                            Log.i("WeChatUtils","群聊分割名称后字段:"+text);
+                        }
 
                         if(cacheChat!=null && cacheChat.getMessage()!=null && cacheChat.getMessage().equals(text)){
                             // --- 过滤重复信息

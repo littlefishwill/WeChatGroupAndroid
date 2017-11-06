@@ -1,8 +1,6 @@
 package com.szw.tools.wechatgroupandroid;
 
 import android.animation.Animator;
-import android.animation.IntEvaluator;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.ActivityOptions;
@@ -18,16 +16,14 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.Toast;
 
 import com.szw.tools.wechatgroupandroid.pages.actionlist.ActionListFragment;
 import com.szw.tools.wechatgroupandroid.pages.qa.QaManager;
 import com.szw.tools.wechatgroupandroid.pages.qa.QaPlayResultManager;
 import com.szw.tools.wechatgroupandroid.service.PhoneActivityService;
 import com.szw.tools.wechatgroupandroid.service.StartService;
-import com.szw.tools.wechatgroupandroid.user.User;
+import com.szw.tools.wechatgroupandroid.domain.User;
 import com.szw.tools.wechatgroupandroid.user.UserManager;
 import com.szw.tools.wechatgroupandroid.utils.DpOrPx;
 import com.szw.tools.wechatgroupandroid.view.RippleView;

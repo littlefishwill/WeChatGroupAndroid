@@ -132,6 +132,7 @@ public class QaRadomAskManager extends Manager {
 
     }
 
+    private int cacheLibPos,cacheQuestionsPos;
     public void raDomQuestions(){
         synchronized (this) {
             Map<String, QaChoose> userAskChooseLib = DbManager.getInstance().getRadomAskChooseLib();
@@ -171,9 +172,17 @@ public class QaRadomAskManager extends Manager {
 
             playingQuesions = question;
 
+            if(cacheLibPos == radomLibPos && cacheQuestionsPos == radomQuesionsPos ){
+                raDomQuestions();
+                return;
+            }
+
             if (qaRadomAskManagerListener != null) {
                 qaRadomAskManagerListener.onReadyQusetions(questions, question, radomQuesionsPos);
             }
+
+            cacheLibPos = radomLibPos;
+            cacheQuestionsPos = radomQuesionsPos;
 
             countDownTimer = new CountDownTimer(question.getTime(), 1000) {
                 @Override

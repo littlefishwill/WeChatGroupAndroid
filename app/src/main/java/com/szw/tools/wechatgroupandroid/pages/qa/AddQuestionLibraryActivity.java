@@ -5,24 +5,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.transition.ArcMotion;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.Interpolator;
 import android.widget.AutoCompleteTextView;
 
 import com.szw.tools.wechatgroupandroid.BaseActivity;
-import com.szw.tools.wechatgroupandroid.MainActivity;
 import com.szw.tools.wechatgroupandroid.R;
 import com.szw.tools.wechatgroupandroid.pages.qa.doamin.Questions;
-import com.szw.tools.wechatgroupandroid.user.User;
+import com.szw.tools.wechatgroupandroid.domain.User;
 import com.szw.tools.wechatgroupandroid.user.UserManager;
-import com.szw.tools.wechatgroupandroid.view.dialog.MorphDialogToFab;
-import com.szw.tools.wechatgroupandroid.view.dialog.MorphFabToDialog;
-import com.szw.tools.wechatgroupandroid.view.dialog.MorphTransition;
 
 public class AddQuestionLibraryActivity extends BaseActivity {
 
