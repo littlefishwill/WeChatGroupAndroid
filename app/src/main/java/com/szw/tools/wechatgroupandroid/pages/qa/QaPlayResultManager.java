@@ -55,8 +55,6 @@ public class QaPlayResultManager {
         qaResult.setQaLibraryAuthorName(questions.getAuthor());
         qaResult.setQaResultItems(new ArrayList<QaResultItem>());
         Log.e("QaPlayResultManager", "onStart");
-
-
 }
 
     public void onPlayIng(Question question){
@@ -77,8 +75,6 @@ public class QaPlayResultManager {
         if(qaResult == null || qaResult.getQaResultItems()==null){
             return;
         }
-
-
 
         QaResultItem qaResultItem = qaResult.getQaResultItems().get(qaResult.getQaResultItems().size() - 1);
 

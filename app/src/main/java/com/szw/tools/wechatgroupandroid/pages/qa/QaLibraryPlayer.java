@@ -27,6 +27,8 @@ public class QaLibraryPlayer {
     private WeChat weChat;
     private QaIng qaIng;
     long progressTime = 0;
+
+    private  boolean playIng = false;
     public void play(QaPlayListenerListener qapl, WeChat wct){
         quitePlay();
         this.qaPlayListenerListener = qapl;
@@ -34,6 +36,7 @@ public class QaLibraryPlayer {
         QaIngManager.getInstance().loadQaIng(new QaIngLoadListener() {
             @Override
             public void onLoad(QaIng qaIng) {
+                playIng = true;
                 QaLibraryPlayer.this.qaIng = qaIng;
                 qaNowQuestions = QaIngManager.getInstance().getQaNowQuestions();
                 final QaIng_Question qaIng_question = qaIng.getQaings().get(weChat.getName());
@@ -53,6 +56,7 @@ public class QaLibraryPlayer {
 
                 if(qaNowQuestions.getQuestions().size()==0){
                     qaPlayListenerListener.onFinshPlay();
+                    playIng = false;
                     return;
                 }
                 if(currentPlayPos>= qaNowQuestions.getQuestions().size()){
@@ -77,8 +81,6 @@ public class QaLibraryPlayer {
                         QaPlayResultManager.getInstance().onStar(qaNowQuestions);
                         //--- 开始
                         playGoOn(qaNowQuestions.getQuestions().get(currentPlayPos==-1?0:currentPlayPos),progressTime);
-
-
                     }
                 };
                 countDownTimer.start();
@@ -132,6 +134,7 @@ public class QaLibraryPlayer {
 
             @Override
             public void onFinish() {
+                WeChatUtils.getInstance().sendText("本题目无人回答正确!进入下一题",true);
                 playNext();
             }
         };
@@ -151,6 +154,7 @@ public class QaLibraryPlayer {
             QaPlayResultManager.getInstance().onStop();
             countDownTimer.cancel();
             qaPlayListenerListener.onFinshPlay();
+            playIng = false;
         }
     }
 
@@ -165,7 +169,10 @@ public class QaLibraryPlayer {
         int i = 1;
         for(ChatScoreDao chatScoreDao:groupInSCore){
             socreBuilder.append("第"+i+"名:"+chatScoreDao.getChatName()+" 总分:"+chatScoreDao.getScore()+"\r\n");
+            i = i+1;
         }
+
+        socreBuilder.append("可发送“查分”查看历史分数");
         String trim = socreBuilder.toString().trim();
         WeChatUtils.getInstance().sendText(trim,true);
 
@@ -174,13 +181,14 @@ public class QaLibraryPlayer {
     private void savePlayProgress(long playtime) {
         qaIng_question = new QaIng_Question();
         qaIng_question.setCurrent(currentPlayPos);
+
         qaIng_question.setUseTime(playtime);
         qaIng.getQaings().put(weChat.getName(),qaIng_question);
         QaIngManager.getInstance().saveQaing(qaIng);
     }
 
     public void onReceive(Chat chat){
-        if(question!=null){
+        if(question!=null && playIng){
             for(String answer:question.getType2Answer()){
                 String message = chat.getMessage();
                 if(message.trim().toLowerCase().equals(answer.toLowerCase())){

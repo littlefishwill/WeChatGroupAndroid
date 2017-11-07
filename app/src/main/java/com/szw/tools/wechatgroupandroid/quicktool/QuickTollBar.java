@@ -185,6 +185,11 @@ public class QuickTollBar  extends Toast{
 
         if(!QaManager.getInstance().isOpen()){
             return;
+        }else{
+            titleQa.setText("您没有开启任何答题题库");
+            qades.setText("请前往题库界面，点击任意红色开始按钮。");
+            tips.setText("请选择题库");
+            times.setText("--");
         }
 
         // custom qa
